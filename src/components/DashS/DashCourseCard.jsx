@@ -6,11 +6,10 @@ const DashCourseCard = () => {
         navigate('/CourseDescription')
     }
     return (
-        <div onClick={handleCourseClick} className=' cursor-pointer flex flex-col h-full w-full bg-[#DDE4F0] p-4 gap-2'>
-            <img src="image.png" className='h-[75%]' alt="" />
-            <div className=' text-[#173061] flex items-center justify-center'>
-                <div className='font-bold text-lg'>Advance Finance</div>
-                {/* <div className='text-sm '>Mr Varun Singh</div> */}
+        <div onClick={handleCourseClick} className=' cursor-pointer flex flex-col h-[full] w-[full] bg-[#DDE4F0] px-4 py-2 gap-2'>
+            <img src="image.png" className='h-[75%] pt-2' alt="" />
+            <div className=' text-[#173061] flex items-center justify-start'>
+                <div className='font-semibold text-[1.5rem]'>Advance Finance</div>
             </div>
         </div>
     )
