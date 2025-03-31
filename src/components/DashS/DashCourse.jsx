@@ -5,7 +5,6 @@ const DashCourse = () => {
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // Scroll Left
   const scrollLeft = () => {
@@ -43,21 +42,9 @@ const DashCourse = () => {
     };
   }, []);
 
-  // Update window width on resize
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
   return (
     <div className="flex w-full h-full items-center">
-      {/* Left Arrow */}
+      {/* Left Arrow (Smaller Size, 5% Width) */}
       <div className="w-[5%] flex justify-center items-center">
         {showLeftArrow && (
           <img
@@ -69,29 +56,19 @@ const DashCourse = () => {
         )}
       </div>
 
-      {/* Scrollable Course Container */}
+      {/* Scrollable Course Container (90% Width) */}
       <div
         ref={scrollRef}
-        className={`${
-          windowWidth >= 1000
-            ? 'w-[100%] h-[100%] flex items-center overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:"none"] [scrollbar-width:"none"] gap-6'
-            : 'w-[100%] h-[100%] flex items-center justify-center'
-        }`}
+        className="w-[90%] flex overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] gap-6 p-4"
       >
-        {windowWidth >= 1000
-          ? Array.from({ length: 10 }).map((_, index) => (
-              <div key={index} className="min-w-[375px]">
-                <DashCourseCard />
-              </div>
-            ))
-          : (
-            <div className="min-w-[375px]">
-              <DashCourseCard />
-            </div>
-          )}
+        {Array.from({ length: 10 }).map((_, index) => (
+          <div key={index} className="w-[23%] min-w-[200px]">
+            <DashCourseCard />
+          </div>
+        ))}
       </div>
 
-      {/* Right Arrow */}
+      {/* Right Arrow (Smaller Size, 5% Width) */}
       <div className="w-[5%] flex justify-center items-center">
         {showRightArrow && (
           <img

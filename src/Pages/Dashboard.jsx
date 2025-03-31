@@ -47,6 +47,15 @@ const Dashboard = ({ role }) => {
                 </div>
             )}
 
+            {userRole === 'teacher' && (
+                <div>
+                    <div className='flex flex-row justify-between items-center w-full'>
+                        <h1 className='text-2xl md:text-3xl font-semibold text-dblue'>Dashboard</h1>
+                        <Profo />
+                    </div>
+                </div>
+            )}
+
             {userRole === 'student' && (
                 <div className='body flex flex-col w-full h-[100vh] p-0 md:p-0'>
                 <div className='flex flex-row justify-between items-center w-full'>
