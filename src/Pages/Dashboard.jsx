@@ -57,12 +57,12 @@ const Dashboard = ({ role }) => {
             )}
 
             {userRole === 'student' && (
-                <div className='body flex flex-col w-full h-[100vh] p-0 md:p-0'>
+                <div className='body flex flex-col w-full h-full p-0 md:p-0'>
                 <div className='flex flex-row justify-between items-center w-full'>
                     <h1 className='text-2xl md:text-3xl font-semibold text-dblue'>Recent Courses</h1>
                     <Profo />
                 </div>
-            <div className='sub-body flex flex-col gap-6 h-full w-full mt-4 md:mt-4 p-2 pb-0'>
+            <div className='sub-body flex flex-col gap-6 h-[90%] w-full mt-4 md:mt-4 p-2 pb-0'>
                 {/* <div className='left flex flex-col h-full w-full md:w-[70%]'>
                     <div className='left-top flex flex-col md:flex-row w-full h-full md:h-[50%]'>
                         <div className='left-top-left h-full w-full md:w-[60%] p-1'>
@@ -83,12 +83,13 @@ const Dashboard = ({ role }) => {
                     <DashCourse />
                 </div>
                 <div className='flex flex-col md:flex-row gap-6 h-[50%] w-full'>
+                <div className='bg-lblue h-full md:w-[50%] w-full rounded'>
+                                <DashNotice />
+                            </div>
                             <div className='bg-lblue h-full md:w-[50%] w-full rounded'>
                                 <DashAttendance />
                             </div>
-                            <div className='bg-lblue h-full md:w-[50%] w-full rounded'>
-                                <DashNotice />
-                            </div>
+                            
                         </div>
             </div>
             </div>

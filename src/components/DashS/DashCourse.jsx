@@ -45,10 +45,10 @@ const DashCourse = () => {
   return (
     <div className="flex w-full h-full items-center">
       {/* Left Arrow (Smaller Size, 5% Width) */}
-      <div className="w-[5%] flex justify-center items-center">
+      <div className="w-[4%] flex justify-center items-center">
         {showLeftArrow && (
           <img
-            className="h-6 cursor-pointer rotate-180"
+            className="h-5 cursor-pointer rotate-180"
             src="https://img.icons8.com/?size=100&id=79025&format=png&color=173061"
             alt="Left Arrow"
             onClick={scrollLeft}
@@ -59,7 +59,7 @@ const DashCourse = () => {
       {/* Scrollable Course Container (90% Width) */}
       <div
         ref={scrollRef}
-        className="w-[90%] flex overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] gap-6 p-4"
+        className="w-[92%] flex overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] gap-6 p-0"
       >
         {Array.from({ length: 10 }).map((_, index) => (
           <div key={index} className="w-[23%] min-w-[200px]">
@@ -69,10 +69,10 @@ const DashCourse = () => {
       </div>
 
       {/* Right Arrow (Smaller Size, 5% Width) */}
-      <div className="w-[5%] flex justify-center items-center">
+      <div className="w-[4%] flex justify-center items-center">
         {showRightArrow && (
           <img
-            className="h-6 cursor-pointer"
+            className="h-5 cursor-pointer"
             src="https://img.icons8.com/?size=100&id=79025&format=png&color=173061"
             alt="Right Arrow"
             onClick={scrollRight}

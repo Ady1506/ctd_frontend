@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+    const location = useLocation();
     const [selected, setSelect] = useState('Dashboard');
+    useEffect(() => {
+        const path = location.pathname.replace('/', '');
+        setSelect(path.charAt(0).toUpperCase() + path.slice(1)); // Capitalize first letter
+    }, [location]);
     const [role, setRole] = useState('student'); // Change this dynamically based on login
     const navigate = useNavigate();
     useEffect(() => {

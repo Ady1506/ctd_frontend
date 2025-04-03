@@ -1,4 +1,5 @@
 import {React,useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 import Profo from '../Profo'
 import CourseCard from './CourseCard'
 import EnrollCard from './EnrollCard'
@@ -7,12 +8,13 @@ import Updates from './Updates'
 import Upcoming from './Upcoming'
 import Certificates from './Certificates'
 const CourseDescription = () => {
+  const navigate = useNavigate();
   const [isEnrolled, setIsEnrolled] = useState(false);
   return (
     <div className='body flex flex-col w-full h-full p-4 md:p-10 bg-gray-100'>
       <div className='flex flex-row justify-between items-center w-full'>
         <div className='flex flex-row items-center gap-3'>
-          <div className='flex items-center bg-[#DDE4F0] py-1 px-2 text-xs font-bold justify-center rounded cursor-pointer'>&lt; BACK</div>
+          <div className='flex items-center bg-[#DDE4F0] py-1 px-2 text-xs font-bold justify-center rounded cursor-pointer' onClick={()=>navigate(-1)}>&lt; BACK</div>
           <h1 className='text-2xl md:text-3xl font-semibold text-dblue'>Course Description</h1>
         </div>
         <Profo />
