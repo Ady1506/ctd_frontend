@@ -14,11 +14,28 @@ const Auth = () => {
   });
   const [error, setError] = useState('');
 
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (token) {
+  //     navigate('/Dashboard');
+  //   }
+  // }, [navigate]);
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/Dashboard');
-    }
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get('http://localhost:8000/api/users/current', {
+          withCredentials: true, // important for sending cookies
+        });
+
+        if (res.data.user) {
+          navigate('/Dashboard');
+        }
+      } catch (err) {
+        console.log('Not logged in yet.');
+      }
+    };
+
+    checkAuth();
   }, [navigate]);
 
   const handleChange = (e) => {
@@ -35,16 +52,19 @@ const Auth = () => {
     const endpoint = isSignup
       ? 'http://localhost:8000/api/users/signup'
       : 'http://localhost:8000/api/users/signin';
-
+  
     try {
       const { email, password, display_name } = form;
       const payload = isSignup
         ? { email, password, display_name, role: 'student' }
         : { email, password };
-
-      const res = await axios.post(endpoint, payload);
+  
+      const res = await axios.post(endpoint, payload, {
+        withCredentials: true, // 👈🏽 Add this line
+      });
+  
       const { token } = res.data;
-
+  
       localStorage.setItem('token', token);
       navigate('/Dashboard');
     } catch (err) {
@@ -53,6 +73,7 @@ const Auth = () => {
       setError(msg);
     }
   };
+  
 
   return (
     <div className="relative flex min-h-screen w-full bg-[#E4E9F0]">

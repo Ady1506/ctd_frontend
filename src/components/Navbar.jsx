@@ -40,10 +40,18 @@ const Navbar = () => {
         ],
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem("role");
-        localStorage.removeItem("token");
-        navigate("/");
+    const handleLogout = async () => {
+        try {
+            await fetch("http://localhost:8000/api/users/logout", {
+                method: "POST",
+                credentials: "include",
+            });
+
+            localStorage.removeItem("role");
+            navigate("/");
+        } catch (err) {
+            console.error("Logout failed", err);
+        }
     };
 
     return (
@@ -60,7 +68,10 @@ const Navbar = () => {
                                 <div
                                     key={item.name}
                                     className={`flex flex-row items-center py-1.5 px-4 rounded-md cursor-pointer transition-colors duration-300 ${selected === item.name ? 'bg-dblue' : ''}`}
-                                    onClick={() => { setSelect(item.name); navigate(item.name); }}
+                                    onClick={() => {
+                                        setSelect(item.name);
+                                        navigate(`/${item.name.toLowerCase()}`);
+                                    }}
                                 >
                                     <img
                                         src={item.icon}
@@ -92,12 +103,15 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Nav (no logout here for now) */}
+            {/* Mobile Nav */}
             <div className="mobile-nav lg:hidden fixed bottom-0 left-0 w-full bg-lblue flex justify-around py-4 shadow-md">
                 {navItems[role].map((item) => (
                     <button
                         key={item.name}
-                        onClick={() => setSelect(item.name)}
+                        onClick={() => {
+                            setSelect(item.name);
+                            navigate(`/${item.name.toLowerCase()}`);
+                        }}
                         className="flex flex-col items-center"
                     >
                         <img
