@@ -47,7 +47,7 @@ const DashNotice = () => {
 
   return (
     <div className='h-full w-full flex flex-col gap-3 p-4'>
-      <div className='flex justify-between w-full text-[#173061]'>
+      <div className='flex justify-between w-full text-[#173061] mb-4'>
         <div className='font-bold text-lg cursor-default'>Recent Notice</div>
         <div className='underline cursor-pointer' onClick={() => setExpanded(true)}>view all</div>
       </div>
