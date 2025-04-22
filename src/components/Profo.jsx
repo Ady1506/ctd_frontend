@@ -23,7 +23,7 @@ const Profo = () => {
 
   return (
     <div className='flex flex-row items-center gap-2'>
-      <h1 className='text-xl font-medium'>{userName || 'Loading...'}</h1>
+      <h1 className='text-xl font-medium'>{userName || 'User'}</h1>
       <img
         src='https://img.icons8.com/?size=100&id=84898&format=png&color=173061'
         className='w-10 h-10'
