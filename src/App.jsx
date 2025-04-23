@@ -76,7 +76,8 @@ function LayoutWithNavbar() {
           <Route path='/settings' element={<Ssetting />} />
           <Route path='/courses' element={<Courses />} />
           <Route path='/attendance' element={<Attendance />} />
-          <Route path='/courseDescription' element={<CourseDescription />} />
+          {/* <Route path='/courseDescription' element={<CourseDescription />} /> */}
+          <Route path="/CourseDescription/:id" element={<CourseDescription />} />
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Routes>
       </div>
