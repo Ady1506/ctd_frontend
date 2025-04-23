@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';           
+import axios from 'axios';
 import DashCourseCard from '../DashS/DashCourseCard';
 
 const CourseList = ({ selectedTab, searchTerm }) => {
   const itemsPerPage = 8;
-  const [allCourses, setAllCourses]   = useState([]);
+  const [allCourses, setAllCourses] = useState([]);
   const [yourCourses, setYourCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -23,19 +24,24 @@ const CourseList = ({ selectedTab, searchTerm }) => {
     fetchCourses();
   }, []);
 
-  // pick which to show, then search & paginate
-  const source = selectedTab === 'all' ? allCourses : yourCourses;
-  const filtered = source.filter(c =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+  useEffect(() => {
+    // Recalculate the filtered courses whenever selectedTab or searchTerm changes
+    const source = selectedTab === 'all' ? allCourses : yourCourses;
+    const filtered = source.filter((c) =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredCourses(filtered);
+    setCurrentPage(1); // Reset to the first page when switching tabs or searching
+  }, [selectedTab, searchTerm, allCourses, yourCourses]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredCourses.length / itemsPerPage));
   const start = (currentPage - 1) * itemsPerPage;
-  const visible = filtered.slice(start, start + itemsPerPage);
+  const visible = filteredCourses.slice(start, start + itemsPerPage);
 
   return (
-    <div className="flex flex-col flex-grow px-10 pb-0">
+    <div className="flex flex-col flex-grow px-10 py-5 justify-between">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 min-h-[300px]">
-        {visible.map(course => (
+        {visible.map((course) => (
           <div key={course.id} className="p-2">
             <DashCourseCard course={course} />
           </div>
