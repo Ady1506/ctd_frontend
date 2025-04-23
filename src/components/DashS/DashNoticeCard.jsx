@@ -1,31 +1,20 @@
-// import React from 'react'
-
-// const DashNoticeCard = () => {
-//   return (
-//     <div className='w-full h-[60px] bg-[#DDE4F0] rounded-lg p-3 shadow-md'>
-//       {/* Attendance Card Content */}
-//     </div>
-//   )
-// }
-
-// export default DashNoticeCard
-import React from 'react';
 import { FaPaperclip } from 'react-icons/fa';
 
-const DashNoticeCard = ({ date, time, text, hasAttachment }) => {
-  return (
-    <div className='w-full h-[180px] bg-[#DDE4F0] rounded-lg p-4 shadow-lg relative flex flex-col items-center justify-center text-[#173061]'>
-      {/* Date and Time */}
-      <div className='absolute top-2 left-2'>
-        <div className='text-l font-bold'>{date}</div>
-        <div className='text-xs'>{time}</div>
-      </div>
-      {/* Notice Text */}
-      {/* <div className='text-sm font-semibold text-center px-2'>{text.length > 50 ? text.substring(0, 50) + '...' : text}</div> */}
-      <div className='text-sm font-semibold text-center px-2 overflow-hidden line-clamp-2'>{text}</div>
+const DashNoticeCard = ({ date, time, text, hasAttachment, course }) => {
+  const truncateText = (text, limit) => {
+    const words = text.split(' ');
+    return words.length > limit ? words.slice(0, limit).join(' ') + '...' : text;
+  };
 
-      {/* Attachment Icon */}
-      <FaPaperclip className={`absolute top-2 right-2 text-${hasAttachment ? '[#173061]' : 'gray'}-500 cursor-pointer`} />
+  return (
+    <div className='p-4 border rounded-lg shadow-md max-h-56 hover:shadow-lg transition-shadow duration-300'>
+      <div className='text-sm text-gray-500 mb-1'>{date} - {time}</div>
+      <div className='font-bold text-[#173061] text-lg mb-2'>{course}</div>
+      <div className='text-sm text-gray-700 mb-3'>{truncateText(text, 10)}</div>
+      <div className={`text-xs mt-2 ${hasAttachment ? 'text-blue-500' : 'text-gray-400'} flex items-center`}>
+        <FaPaperclip className={`mr-1 ${hasAttachment ? 'hover:text-blue-700 cursor-pointer' : ''}`} />
+        {hasAttachment ? 'Attachment' : 'No Attachment'}
+      </div>
     </div>
   );
 };

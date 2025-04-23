@@ -1,23 +1,3 @@
-// import React from 'react'
-// import DashNoticeCard from './DashNoticeCard'
-// const DashNotice = () => {
-//   return (
-//     <div className='h-full w-full flex flex-col gap-3 p-4 '>
-//       <div className='flex justify-between w-full text-[#173061]'>
-//         <div className='font-bold text-lg cursor-default'>Recent Notice</div>
-//         <div className='underline cursor-pointer'>view all</div>
-//       </div>
-//       <div className='flex flex-col gap-2 w-full h-full'>
-//         <DashNoticeCard />
-//         <DashNoticeCard />
-//         <DashNoticeCard />
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default DashNotice
-
 import React, { useState } from 'react';
 import DashNoticeCard from './DashNoticeCard';
 
@@ -25,24 +5,15 @@ const DashNotice = () => {
   const [expanded, setExpanded] = useState(false);
 
   const notices = [
-    { date: '17 Feb', time: '10:30 AM', text: 'Meeting at 3 PM regarding project updates. Meeting at 3 PM regarding project updates. Meeting at 3 PM regarding project updates.', hasAttachment: true },
-    { date: '16 Feb', time: '12:00 PM', text: 'Submit your assignments by Friday.', hasAttachment: false },
-    { date: '15 Feb', time: '09:00 AM', text: 'Workshop on React.js in Room 204.', hasAttachment: true },
-    { date: '14 Feb', time: '02:00 PM', text: 'Team meeting for project discussion.', hasAttachment: false },
-    { date: '13 Feb', time: '04:30 PM', text: 'New course enrollment deadline.', hasAttachment: true },
-    { date: '12 Feb', time: '11:00 AM', text: 'Reminder: Monthly report submission.', hasAttachment: false },
-    { date: '11 Feb', time: '01:00 PM', text: 'Company webinar on industry trends.', hasAttachment: true },
-    { date: '10 Feb', time: '05:00 PM', text: 'Hackathon registration ends soon.', hasAttachment: false },
-    { date: '09 Feb', time: '03:30 PM', text: 'Security policy update session.', hasAttachment: true },
-    { date: '17 Feb', time: '10:30 AM', text: 'Meeting at 3 PM regarding project updates. Meeting at 3 PM regarding project updates. Meeting at 3 PM regarding project updates.', hasAttachment: true },
-    { date: '16 Feb', time: '12:00 PM', text: 'Submit your assignments by Friday.', hasAttachment: false },
-    { date: '15 Feb', time: '09:00 AM', text: 'Workshop on React.js in Room 204.', hasAttachment: true },
-    { date: '14 Feb', time: '02:00 PM', text: 'Team meeting for project discussion.', hasAttachment: false },
-    { date: '13 Feb', time: '04:30 PM', text: 'New course enrollment deadline.', hasAttachment: true },
-    { date: '12 Feb', time: '11:00 AM', text: 'Reminder: Monthly report submission.', hasAttachment: false },
-    { date: '11 Feb', time: '01:00 PM', text: 'Company webinar on industry trends.', hasAttachment: true },
-    { date: '10 Feb', time: '05:00 PM', text: 'Hackathon registration ends soon.', hasAttachment: false },
-    { date: '09 Feb', time: '03:30 PM', text: 'Security policy update session.', hasAttachment: true },
+    { date: '17 Feb', time: '10:30 AM', text: 'Meeting at 3 PM regarding project updates.Meeting at 3 PM regarding project updates.Meeting at 3 PM regarding project updates.Meeting at 3 PM regarding project updates.Meeting at 3 PM regarding project updates.', hasAttachment: true, course: 'Project Management' },
+    { date: '16 Feb', time: '12:00 PM', text: 'Submit your assignments by Friday.', hasAttachment: false, course: 'Data Structures' },
+    { date: '15 Feb', time: '09:00 AM', text: 'Workshop on React.js in Room 204.', hasAttachment: true, course: 'Web Development' },
+    { date: '14 Feb', time: '02:00 PM', text: 'Team meeting for project discussion.', hasAttachment: false, course: 'Software Engineering' },
+    { date: '13 Feb', time: '04:30 PM', text: 'New course enrollment deadline.', hasAttachment: true, course: 'General' },
+    { date: '12 Feb', time: '11:00 AM', text: 'Reminder: Monthly report submission.', hasAttachment: false, course: 'Business Analytics' },
+    { date: '11 Feb', time: '01:00 PM', text: 'Company webinar on industry trends.', hasAttachment: true, course: 'Industry Trends' },
+    { date: '10 Feb', time: '05:00 PM', text: 'Hackathon registration ends soon.', hasAttachment: false, course: 'Hackathon' },
+    { date: '09 Feb', time: '03:30 PM', text: 'Security policy update session.', hasAttachment: true, course: 'Cybersecurity' },
   ];
 
   return (
