@@ -73,7 +73,7 @@ function LayoutWithNavbar() {
           <Route path='/Dashboard' element={<Dashboard />} />
           <Route path='/forms' element={<Forms />} />
           <Route path='/students' element={<Students />} />
-          <Route path='/settings' element={<Ssetting />} />
+          <Route path='/profile' element={<Ssetting />} />
           <Route path='/courses' element={<Courses />} />
           <Route path='/attendance' element={<Attendance />} />
           {/* <Route path='/courseDescription' element={<CourseDescription />} /> */}

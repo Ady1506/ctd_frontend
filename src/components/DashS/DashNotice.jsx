@@ -51,7 +51,7 @@ const DashNotice = () => {
 
   return (
     <div className='h-full w-full flex flex-col gap-3 p-4'>
-      <div className='flex justify-between w-full text-[#173061] mb-4'>
+      <div className='flex justify-between w-full text-[#173061] mb-2'>
         <div className='font-bold text-lg cursor-default'>Recent Notice</div>
         <div className='underline cursor-pointer' onClick={handleViewAll}>view all</div>
       </div>
@@ -74,7 +74,7 @@ const DashNotice = () => {
         <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center'>
           <div className='bg-white p-6 rounded-lg shadow-lg w-3/4 max-h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:[width:3px] [&::-webkit-scrollbar-track]:rounded-lg [&::-webkit-scrollbar-track]:m-[4px] 
                       [&::-webkit-scrollbar-thumb]:bg-[#173061]'>
-            <div className='flex justify-between items-center mb-4'>
+            <div className='flex justify-between items-center mb-2'>
               <h2 className='text-lg font-bold text-[#173061]'>
                 {viewAll ? 'All Notices' : selectedNotice?.course}
               </h2>

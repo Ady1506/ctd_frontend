@@ -30,7 +30,7 @@ const Navbar = () => {
             { name: 'Dashboard', icon: 'https://img.icons8.com/?size=100&id=6ocfyfPqD0qz&format=png&color=173061' },
             { name: 'Courses', icon: 'https://img.icons8.com/?size=100&id=31340&format=png&color=173061' },
             { name: 'Attendance', icon: 'https://img.icons8.com/?size=100&id=50897&format=png&color=173061' },
-            { name: 'Settings', icon: 'https://img.icons8.com/?size=100&id=83214&format=png&color=173061' },
+            { name: 'Profile', icon: 'https://img.icons8.com/?size=100&id=84898&format=png&color=173061' },
         ],
         teacher: [
             { name: 'Dashboard', icon: 'https://img.icons8.com/?size=100&id=6ocfyfPqD0qz&format=png&color=173061' },

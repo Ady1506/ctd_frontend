@@ -5,6 +5,7 @@ const DashNoticeCard = ({ date, time, text, hasAttachment, course, isExpanded, o
     const words = text.split(' ');
     return words.length > limit ? words.slice(0, limit).join(' ') + '...' : text;
   };
+  
 
   return (
     <div className='p-4 border flex flex-col justify-between rounded-lg shadow-md h-56 hover:shadow-lg transition-shadow duration-300 bg-gray-100'>
@@ -29,7 +30,7 @@ const DashNoticeCard = ({ date, time, text, hasAttachment, course, isExpanded, o
         {!hideViewDetails && (
           <button
             onClick={onViewDetails}
-            className='text-xs text-white bg-blue-500 hover:bg-blue-700 px-3 py-1 rounded transition-colors duration-300'
+            className='text-xs text-white bg-blue-500 hover:bg-blue-700 ml-1 px-2 py-1 rounded transition-colors duration-300'
           >
             View Details
           </button>
