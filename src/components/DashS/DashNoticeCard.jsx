@@ -25,7 +25,6 @@ const DashNoticeCard = ({ date, time, text, hasAttachment, course, isExpanded, o
           onClick={hasAttachment ? onAttachmentClick : undefined}
         >
           <FaPaperclip className={`mr-1 ${hasAttachment ? 'hover:text-blue-700' : ''}`} />
-          {hasAttachment ? 'Attachment' : 'No Attachment'}
         </div>
         {!hideViewDetails && (
           <button

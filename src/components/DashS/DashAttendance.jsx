@@ -1,10 +1,34 @@
-import React from 'react'
-import DashAttendanceCard from './DashAttendanceCard'
+import React, { useEffect, useState } from 'react';
+import DashAttendanceCard from './DashAttendanceCard';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 const DashAttendance = () => {
   const navigate = useNavigate();
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/attendances/recent');
+        const parsedData = response.data.map(item => ({
+          courseName: item.course_name,
+          markedAt: item.marked_at,
+        }));
+        setAttendanceData(parsedData);
+        console.log(parsedData);
+      } catch (error) {
+        console.error('Error fetching attendance data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAttendance();
+  }, []);
+
   const handleViewAllClick = () => {
-    // Navigate to the attendance page
     navigate('/attendance');
   };
 
@@ -17,12 +41,20 @@ const DashAttendance = () => {
       <div className="flex-grow overflow-auto pr-2 
                       [&::-webkit-scrollbar]:[width:3px] 
                       [&::-webkit-scrollbar-thumb]:bg-[#173061] flex flex-col gap-2">
-        {Array(15).fill(0).map((_, index) => (
-          <DashAttendanceCard key={index} />
-        ))}
+        {loading ? (
+          <div>Loading...</div>
+        ) : attendanceData.length === 0 ? (
+          <div className="flex justify-center items-center h-full text-gray-500 font-bold">
+            No attendance record
+          </div>
+        ) : (
+          attendanceData.map((item, index) => (
+            <DashAttendanceCard key={index} data={item} />
+          ))
+        )}
       </div>
     </div>
   );
-}
+};
 
-export default DashAttendance
+export default DashAttendance;
