@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import ParticularCourseAttendance from './ParticularCourseAttendance';
 
-const CourseAttendance = () => {
+const CourseAttendance = ({ subjectWise }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const courses = [
-    'Mathematics', 'Physics', 'Computer Science', 'Electronics',
-    'Mechanical', 'Civil', 'AI & ML', 'Data Science',
-    'Cyber Security', 'Cloud Computing', 'Blockchain', 'Bioinformatics'
-  ];
 
+  // Convert subjectWise object to an array of { courseName, percentage }
+  const courses = Object.entries(subjectWise).map(([courseName, percentage]) => ({
+    courseName,
+    percentage,
+  }));
+
+  // Filter courses based on the search term
   const filteredCourses = courses.filter(course =>
-    course.toLowerCase().includes(searchTerm.toLowerCase())
+    course.courseName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -33,7 +35,10 @@ const CourseAttendance = () => {
         <div className='grid grid-cols-2 gap-4'>
           {filteredCourses.map((course, index) => (
             <div key={index} className='flex flex-col gap-2'>
-              <ParticularCourseAttendance courseName={course} />
+              <ParticularCourseAttendance
+                courseName={course.courseName}
+                percentage={course.percentage}
+              />
             </div>
           ))}
         </div>
