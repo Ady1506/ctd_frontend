@@ -5,7 +5,8 @@ const Navbar = () => {
     const location = useLocation();
     const [selected, setSelect] = useState('Dashboard');
     const navigate = useNavigate();
-    const [role, setRole] = useState('student');
+    const userRole = localStorage.getItem('userRole') || 'student';
+    const [role, setRole] = useState(userRole);
 
     useEffect(() => {
         const path = location.pathname.replace('/', '');
@@ -22,9 +23,9 @@ const Navbar = () => {
     const navItems = {
         admin: [
             { name: 'Dashboard', icon: 'https://img.icons8.com/?size=100&id=6ocfyfPqD0qz&format=png&color=173061' },
-            { name: 'Forms', icon: 'https://img.icons8.com/?size=100&id=SqSSQeb4kNtf&format=png&color=173061' },
+            { name: 'Courses', icon: 'https://img.icons8.com/?size=100&id=31340&format=png&color=173061' },
             { name: 'Students', icon: 'https://img.icons8.com/?size=100&id=ABBSjQJK83zf&format=png&color=173061' },
-            { name: 'Settings', icon: 'https://img.icons8.com/?size=100&id=83214&format=png&color=173061' },
+            { name: 'Profile', icon: 'https://img.icons8.com/?size=100&id=84898&format=png&color=173061' },
         ],
         student: [
             { name: 'Dashboard', icon: 'https://img.icons8.com/?size=100&id=6ocfyfPqD0qz&format=png&color=173061' },
@@ -46,8 +47,9 @@ const Navbar = () => {
                 method: "POST",
                 credentials: "include",
             });
-
-            localStorage.removeItem("role");
+            localStorage.removeItem("token");
+            localStorage.removeItem("userData");
+            localStorage.removeItem("userRole");
             navigate("/");
         } catch (err) {
             console.error("Logout failed", err);
@@ -69,8 +71,13 @@ const Navbar = () => {
                                     key={item.name}
                                     className={`flex flex-row items-center py-1.5 px-4 rounded-md cursor-pointer transition-colors duration-300 ${selected === item.name ? 'bg-dblue' : ''}`}
                                     onClick={() => {
+                                        if (role === 'admin' && item.name === 'Courses') {
+                                            navigate('/admincourses');
+                                            return;
+                                        }
                                         setSelect(item.name);
                                         navigate(`/${item.name.toLowerCase()}`);
+
                                     }}
                                 >
                                     <img

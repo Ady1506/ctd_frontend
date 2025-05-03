@@ -12,9 +12,11 @@ const Profo = () => {
         });
         console.log('Fetched data:', res.data);
         setUserName(res.data.display_name);
+        localStorage.setItem('userData', JSON.stringify(res.data));
       } catch (err) {
         console.error('Error fetching user:', err);
-        setUserName('Guest');
+        const storedUser = JSON.parse(localStorage.getItem('userData'));
+        setUserName(storedUser?.display_name || 'Guest');
       }
     };
 

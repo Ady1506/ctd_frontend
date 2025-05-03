@@ -14,17 +14,19 @@ const Ssetting = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/api/users/current', {
-          withCredentials: true,
-        });
-        console.log('Fetched user data:', res.data);
+        // const res = await axios.get('http://localhost:8000/api/users/current', {
+        //   withCredentials: true,
+        // });
+        // console.log('Fetched user data:', res.data);
+        const res = JSON.parse(localStorage.getItem('userData'));
+        console.log('Fetched user data:', res);
         setUserData({
-          display_name: res.data.display_name || '',
-          email: res.data.email || '',
-          roll_number: res.data.roll || '',
-          branch: res.data.branch || '',
-          year: res.data.year || '',
-          mobile: res.data.mobile || '',
+          display_name: res.display_name || '',
+          email: res.email || '',
+          roll_number: res.roll || '',
+          branch: res.branch || '',
+          year: res.year || '',
+          mobile: res.mobile || '',
         });
       } catch (err) {
         console.error('Error fetching user:', err);
