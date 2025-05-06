@@ -27,7 +27,7 @@ const StudentModal = ({ student, isOpen, onClose }) => {
 
   // Ensure you have the correct student ID field name.
   // Common names are _id, id, student_id. Adjust 'student._id' below if needed.
-  const studentIdForApi = student.id;
+  const studentIdForApi = student?.id;
 
   return (
     <> {/* Use Fragment to render both modals */}
