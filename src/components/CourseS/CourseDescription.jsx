@@ -77,7 +77,9 @@ const CourseDescription = () => {
               <div className='flex-[1] bg-[#E4E9F0] rounded'>
                 <Updates course={course}/>
               </div>
-              <div className='flex-[1] bg-[#E4E9F0] rounded'></div>
+              <div className='flex-[1] bg-[#E4E9F0] rounded'>
+                
+              </div>
             </div>
             <div className='flex-[1] bg-[#E4E9F0] rounded'>
               <Certificates course={course}/>

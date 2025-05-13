@@ -41,7 +41,7 @@ const EnrollCard = ({ course, studentId, onEnrolled }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 w-full h-[75vh] p-5 px-8">
+    <div className="flex flex-col gap-2 w-full h-[100%] p-5 px-8">
       <div className="text-2xl font-semibold text-dblue">Enrollment</div>
       <div className="flex flex-col h-full justify-between mt-2">
         <EnrollmentPeriodCard course={course} />
