@@ -12,12 +12,17 @@ const DashAttendance = () => {
     const fetchAttendance = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/attendances/recent');
-        const parsedData = response.data.map(item => ({
-          courseName: item.course_name,
-          markedAt: item.marked_at,
-        }));
-        setAttendanceData(parsedData);
-        console.log(parsedData);
+        if(response.data){
+          const parsedData = response.data.map(item => ({
+            courseName: item.course_name,
+            markedAt: item.marked_at,
+          }));
+          setAttendanceData(parsedData);
+          console.log(parsedData);
+        }else{
+          console.log("No data found");
+        }
+        
       } catch (error) {
         console.error('Error fetching attendance data:', error);
       } finally {

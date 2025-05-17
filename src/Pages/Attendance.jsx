@@ -30,6 +30,8 @@ const Attendance = () => {
                     markedAt: item.marked_at,
                 }));
                 setRecentAttendance(parsedData);
+                console.log(parsedData);
+
             } catch (error) {
                 console.error('Error fetching recent attendance:', error);
             } finally {
@@ -49,7 +51,7 @@ const Attendance = () => {
                 <Profo />
             </div>
 
-            <div className="sub-body sm:flex sm:flex-col lg:grid grid-cols-3 grid-rows-4 w-full bg-[#CFCFCF] m-2 mt-6 h-full lg:h-[75vh] gap-0.5">
+            <div className="sub-body sm:flex sm:flex-col lg:grid grid-cols-3 grid-rows-4 w-full bg-[#CFCFCF] m-2 mt-6 h-full lg:h-full gap-0.5">
                 <div className="col-span-2 row-span-1 bg-[#E4E9F0] p-8 flex items-center">
                     <OverallAttendance totalPercentage={totalPercentage} />
                 </div>

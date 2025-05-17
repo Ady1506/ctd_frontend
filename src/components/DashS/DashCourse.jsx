@@ -14,6 +14,7 @@ const DashCourse = () => {
       try {
         const res = await axios.get('http://localhost:8000/api/courses');
         setCourses(res.data);
+        console.log(res.data);
       } catch (err) {
         console.error('Error fetching courses:', err);
       }
@@ -70,17 +71,22 @@ const DashCourse = () => {
         )}
       </div>
 
-      {/* Scrollable Course Container */}
       <div
-        ref={scrollRef}
-        className="w-[92%] h-[90%] flex overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] gap-6 p-0"
-      >
-        {courses.map((course) => (
-          <div key={course.id} className="w-[23%] min-w-[200px]">
-            <DashCourseCard course={course} />
-          </div>
-        ))}
+  ref={scrollRef}
+  className="w-[92%] h-[90%] flex overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] gap-6 p-0"
+>
+  {courses!=null ? (
+    courses.map((course) => (
+      <div key={course.id} className="w-[23%] min-w-[200px]">
+        <DashCourseCard course={course} />
       </div>
+    ))
+  ) : (
+    <div className="w-full text-center text-gray-500 font-bold">
+      No courses available
+    </div>
+  )}
+</div>
 
       {/* Right Arrow */}
       <div className="w-[4%] flex justify-center items-center">

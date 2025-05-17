@@ -27,6 +27,7 @@ const CourseList = ({ selectedTab, searchTerm }) => {
   useEffect(() => {
     // Recalculate the filtered courses whenever selectedTab or searchTerm changes
     const source = selectedTab === 'all' ? allCourses : yourCourses;
+    if(!source) return;
     const filtered = source.filter((c) =>
       c.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -41,14 +42,21 @@ const CourseList = ({ selectedTab, searchTerm }) => {
   return (
     <div className="flex flex-col flex-grow px-10 py-5 justify-between">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 min-h-[300px]">
-        {visible.map((course) => (
-          <div key={course.id} className="p-2">
-            <DashCourseCard course={course} />
+        {visible.length > 0 ? (
+          visible.map((course) => (
+            <div key={course.id} className="p-2">
+              <DashCourseCard course={course} />
+            </div>
+          ))
+        ) : (
+          <div className="col-span-full text-center text-gray-500 font-bold">
+            No courses available
           </div>
-        ))}
-        {Array.from({ length: itemsPerPage - visible.length }).map((_, i) => (
-          <div key={i} className="invisible p-2" />
-        ))}
+        )}
+        {visible.length > 0 &&
+          Array.from({ length: itemsPerPage - visible.length }).map((_, i) => (
+            <div key={i} className="invisible p-2" />
+          ))}
       </div>
 
       {totalPages > 1 && (

@@ -62,7 +62,7 @@ const Navbar = () => {
             <div className="navbar hidden lg:flex flex-col bg-lblue h-[100vh] w-[15%] px-4 py-10 justify-between">
                 <div>
                     <div className="logo hidden lg:block">
-                        <img src="logo.png" alt="Logo" />
+                        <img src="/ctdlogo.png" alt="Logo" />
                     </div>
                     <div className="nav-links hidden lg:flex flex-col h-full justify-start items-center gap-6 mt-10">
                         <div className="flex flex-col gap-3">

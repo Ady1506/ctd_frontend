@@ -9,6 +9,7 @@ import CourseCardEnrolled from './CourseCardEnrolled';
 import Updates from './Updates';
 import Upcoming from './Upcoming';
 import Certificates from './Certificates';
+import CourseAttend from './CourseAttend';
 
 const CourseDescription = () => {
   const { id } = useParams();
@@ -41,7 +42,7 @@ const CourseDescription = () => {
     };
     load();
   }, [id]);
-
+  console.log(course);
   if (loading) return <p className="p-4">Loading…</p>;
   if (!course)  return <p className="p-4 text-red-500">Course not found.</p>;
 
@@ -78,7 +79,7 @@ const CourseDescription = () => {
                 <Updates course={course}/>
               </div>
               <div className='flex-[1] bg-[#E4E9F0] rounded'>
-                
+                <CourseAttend course={course}/>
               </div>
             </div>
             <div className='flex-[1] bg-[#E4E9F0] rounded'>

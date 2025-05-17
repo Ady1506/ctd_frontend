@@ -13,18 +13,23 @@ const DashNotice = () => {
     const fetchNotices = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/notices/enrolled');
-        const formattedNotices = response.data.map((notice) => {
-          const createdAt = dayjs(notice.created_at);
-          return {
-            date: createdAt.format('DD MMM'), // e.g., "23 Apr"
-            time: createdAt.format('hh:mm A'), // e.g., "01:20 PM"
-            text: notice.content,
-            hasAttachment: !!notice.link, // Check if a link exists
-            attachmentLink: notice.link,
-            course: notice.course_name,
-          };
-        });
-        setNotices(formattedNotices.reverse());
+        if(response.data){
+          const formattedNotices = response.data.map((notice) => {
+            const createdAt = dayjs(notice.created_at);
+            return {
+              date: createdAt.format('DD MMM'), // e.g., "23 Apr"
+              time: createdAt.format('hh:mm A'), // e.g., "01:20 PM"
+              text: notice.content,
+              hasAttachment: !!notice.link, // Check if a link exists
+              attachmentLink: notice.link,
+              course: notice.course_name,
+            };
+          });
+          setNotices(formattedNotices.reverse());
+        }else{
+          console.log("No data found");
+        }
+        
       } catch (error) {
         console.error('Failed to fetch notices:', error);
       }
