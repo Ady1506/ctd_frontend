@@ -7,7 +7,7 @@ const Courses = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     return (
-        <div className='body flex flex-col w-full h-full p-4 md:p-10 md:pb-0 bg-gray-100'>
+        <div className='body flex flex-col w-full h-full p-4 md:p-10 pb-0 bg-gray-100'>
             {/* Header */}
             <div className='flex flex-row justify-between items-center w-full'>
                 <h1 className='text-2xl md:text-3xl font-semibold text-dblue'>Courses</h1>

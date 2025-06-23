@@ -46,19 +46,19 @@ const Attendance = () => {
     return (
         <div className='body flex flex-col w-full h-full p-4 md:p-10 bg-gray-100'>
             {/* Header */}
-            <div className='flex flex-row justify-between items-center w-full'>
+            <div className='flex flex-row justify-between items-center w-full '>
                 <h1 className='text-2xl md:text-3xl font-semibold text-dblue'>Attendance Record</h1>
                 <Profo />
             </div>
 
-            <div className="sub-body sm:flex sm:flex-col lg:grid grid-cols-3 grid-rows-4 w-full bg-[#CFCFCF] m-2 mt-6 h-full lg:h-full gap-0.5">
-                <div className="col-span-2 row-span-1 bg-[#E4E9F0] p-8 flex items-center">
+            <div className="sub-body flex flex-col w-full bg-[#CFCFCF] m-2 mt-6 h-full lg:grid lg:grid-cols-3 lg:grid-rows-4 gap-0.5">
+                <div className="bg-[#E4E9F0] p-8 flex items-center lg:col-span-2 lg:row-span-1">
                     <OverallAttendance totalPercentage={totalPercentage} />
                 </div>
-                <div className="col-span-1 row-span-4 bg-[#E4E9F0] p-8 py-4 flex flex-col">
+                <div className="bg-[#E4E9F0] p-8 py-4 flex flex-col lg:col-span-1 lg:row-span-4">
                     <RecentAttendance loading={loading} recentAttendance={recentAttendance} />
                 </div>
-                <div className="col-span-2 row-span-3 bg-[#E4E9F0] p-8 py-4 flex flex-col">
+                <div className="bg-[#E4E9F0] p-8 py-4 flex flex-col h-full lg:col-span-2 lg:row-span-3">
                     <CourseAttendance subjectWise={subjectWise} />
                 </div>
             </div>

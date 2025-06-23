@@ -1,5 +1,6 @@
 // src/components/UpdateCourseModal.jsx
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 // No longer needed: import _isEqual from 'lodash/isEqual';
 
 const API_BASE_URL = 'http://localhost:8000/api';
@@ -196,22 +197,10 @@ const UpdateCourseModal = ({ isOpen, onClose, courseToUpdate, onCourseUpdated })
     console.log("Sending UPDATE Payload:", JSON.stringify(payload, null, 2));
   
     try {
-      const response = await fetch(`${API_BASE_URL}/courses?id=${courseToUpdate.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) {
-        const errorMsg = `Update failed: ${response.status}`;
-        const responseBodyText = await response.text();
-        throw new Error(`${errorMsg} - ${responseBodyText.trim()}`);
-      }
-  
-      const successText = await response.text();
+      const response = await axios.put(`${API_BASE_URL}/courses?id=${courseToUpdate.id}`, payload);
+      
+      // Change response.text() to response.data
+      const successText = response.data;
       console.log("Update success response text:", successText);
       setSuccessMessage('Course updated successfully!');
   
@@ -219,7 +208,6 @@ const UpdateCourseModal = ({ isOpen, onClose, courseToUpdate, onCourseUpdated })
         onCourseUpdated(courseToUpdate.id);
       }
   
-      // Reload the page after showing the success message
       setTimeout(() => {
         setSuccessMessage('');
         onClose();
@@ -227,7 +215,8 @@ const UpdateCourseModal = ({ isOpen, onClose, courseToUpdate, onCourseUpdated })
       }, 2000);
     } catch (err) {
       console.error('Update course failed:', err);
-      setError(err.message || 'Unexpected error occurred during update.');
+      const errorMsg = err.response?.data || err.message || 'Unexpected error occurred during update.';
+      setError(errorMsg);
     } finally {
       setIsSubmitting(false);
     }

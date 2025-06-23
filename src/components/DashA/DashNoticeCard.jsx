@@ -8,7 +8,7 @@ const DashNoticeCard = ({ date, time, text, hasAttachment, course, isExpanded, o
   
 
   return (
-    <div className='p-4 border flex flex-col justify-between rounded-lg shadow-md h-56 hover:shadow-lg transition-shadow duration-300 bg-gray-100'>
+    <div className='p-4 border flex flex-col justify-between rounded-lg shadow-md min-w-56 h-56 hover:shadow-lg transition-shadow duration-300 bg-gray-100 '>
       <div>
         <div className='text-sm text-gray-500 mb-1 flex justify-between'>
           <span>{date}</span>

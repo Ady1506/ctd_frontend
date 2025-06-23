@@ -15,23 +15,15 @@ const EnrolledCoursesModal = ({ studentId, isOpen, onClose }) => {
             setCoursesData([]);
     
             try {
-              const apiUrl = `http://localhost:8000/api/admin/student-details?student_id=${studentId}`;
-              const response = await fetch(apiUrl, {
-                credentials: 'include' // Add this line
-              });
-    
-              if (!response.ok) {
-                 if (response.status === 401 || response.status === 403) {
-                    throw new Error('Authentication failed. Please log in again.');
-                 }
-                throw new Error(`HTTP error! Status: ${response.status}`);
-              }
-              const data = await response.json();
+              const apiUrl = `/api/admin/student-details?student_id=${studentId}`;
+              const response = await axios.get(apiUrl);
+              const data = response.data;
               setCoursesData(Array.isArray(data) ? data : []);
     
             } catch (err) {
               console.error("Failed to fetch courses:", err);
-              setError(err.message || 'Failed to load course details.');
+              const errorMsg = err.response?.data?.message || err.response?.data || 'Failed to load course details.';
+              setError(errorMsg);
               setCoursesData([]);
             } finally {
               setIsLoading(false);

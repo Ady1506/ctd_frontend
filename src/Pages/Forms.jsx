@@ -4,6 +4,8 @@ import CourseCard from '../components/CourseCardAdmin.jsx';
 import CourseDetailModal from '../components/CourseDetailModal';
 import CreateCourseModal from '../components/CreateCourseModal.jsx';
 import CourseArchiveDetailModal from '../components/CourseArchiveDetailModal';
+import axios from 'axios';
+
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -30,26 +32,9 @@ const Forms = () => {
 
         console.log(`Fetching courses from: ${url} (Tab: ${tab})`);
 
-        const fetchOptions = {
-            method: 'GET',
-            headers: { 'Accept': 'application/json' },
-            credentials: 'include' // Always send credentials
-        };
-
         try {
-            const response = await fetch(url, fetchOptions);
-            if (!response.ok) {
-                let errorDetail = `HTTP error! Status: ${response.status}`;
-                try {
-                    const errorText = await response.text();
-                    errorDetail += ` - ${errorText.substring(0, 100)}`;
-                } catch (e) { /* Ignore */ }
-                if (response.status === 401 || response.status === 403) {
-                     errorDetail += " (Authentication failed. Check login/permissions)";
-                }
-                throw new Error(errorDetail);
-            }
-            const data = await response.json();
+            const response = await axios.get(url);
+            const data = response.data;
             if (Array.isArray(data)) {
                 setCourses(data);
             } else {
@@ -57,12 +42,12 @@ const Forms = () => {
             }
         } catch (e) {
             console.error("Failed to fetch courses:", e);
-            setError(e.message || "Failed to load courses.");
+            const errorMsg = e.response?.data?.message || e.response?.data || e.message || "Failed to load courses.";
+            setError(errorMsg);
         } finally {
             setLoading(false);
         }
     };
-    // --- End fetchCourses ---
 
     useEffect(() => {
         fetchCourses(activeTab);

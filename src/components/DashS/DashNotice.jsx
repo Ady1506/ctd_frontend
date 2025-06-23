@@ -55,14 +55,14 @@ const DashNotice = () => {
   };
 
   return (
-    <div className='h-full w-full flex flex-col gap-3 p-4'>
+    <div className='md:h-full h-fit w-full flex flex-col gap-3 p-4'>
       <div className='flex justify-between w-full text-[#173061] mb-2'>
         <div className='font-bold text-lg cursor-default'>Recent Notice</div>
         <div className='underline cursor-pointer' onClick={handleViewAll}>view all</div>
       </div>
 
       {/* Display only the first 3 notices */}
-      <div className='grid grid-cols-3 gap-4 w-full'>
+      <div className='grid grid-cols-3 gap-4 w-full h-full'>
         {notices.slice(0, 3).map((notice, index) => (
           <DashNoticeCard 
             key={index} 

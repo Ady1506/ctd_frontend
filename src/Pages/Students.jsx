@@ -1,7 +1,8 @@
 // src/pages/Students.jsx
 import React, { useState, useEffect } from 'react';
-import StudentCard from '../components/StudentCard';    // Adjust path if needed
-import StudentModal from '../components/StudentModal'; // Adjust path if needed
+import StudentCard from '../components/StudentCard';   
+import StudentModal from '../components/StudentModal'; 
+import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8000/api'; // Configure your API base URL
 
@@ -18,34 +19,23 @@ const Students = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/users`);
-        if (!response.ok) {
-          // Try to get error message from response body
-          let errorMsg = `HTTP error! status: ${response.status}`;
-          try {
-            const errorData = await response.json();
-            errorMsg = errorData.message || errorMsg; // Use backend message if available
-          } catch (jsonError) {
-            // Ignore if response is not JSON
-          }
-          throw new Error(errorMsg);
-        }
-        const usersData = await response.json();
+        const response = await axios.get(`${API_BASE_URL}/users`);
+        const usersData = response.data;
 
-        // Filter for users with role 'student' immediately
         const studentUsers = usersData.filter(user => user.role && user.role.toLowerCase() === 'student');
         setStudents(studentUsers);
 
       } catch (e) {
         console.error("Failed to fetch students:", e);
-        setError(`Failed to load student data. ${e.message || 'Please try again later.'}`);
+        const errorMsg = e.response?.data?.message || e.response?.data || e.message || 'Please try again later.';
+        setError(`Failed to load student data. ${errorMsg}`);
       } finally {
         setLoading(false);
       }
     };
 
     fetchStudents();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
   // --- Modal Handling ---
   const handleCardClick = (student) => {

@@ -7,9 +7,7 @@ const Profo = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/api/users/current', {
-          withCredentials: true,
-        });
+        const res = await axios.get('http://localhost:8000/api/users/current');
         console.log('Fetched data:', res.data);
         setUserName(res.data.display_name);
         localStorage.setItem('userData', JSON.stringify(res.data));

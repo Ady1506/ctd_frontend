@@ -1,5 +1,6 @@
 // src/components/CourseStudentsModal.jsx
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -17,28 +18,14 @@ const CourseStudentsModal = ({ courseId, courseName, isOpen, onClose }) => {
 
         try {
           const apiUrl = `${API_BASE_URL}/admin/course-students?course_id=${courseId}`;
-          const response = await fetch(apiUrl, {
-            credentials: 'include',
-          });
-
-          if (!response.ok) {
-             if (response.status === 401 || response.status === 403) {
-                throw new Error('Authentication failed. Please log in again.');
-             }
-            let errorMsg = `Failed to fetch students: ${response.status}`;
-             try {
-                 const errData = await response.json();
-                 errorMsg = errData.detail || errData.message || errorMsg;
-             } catch (e) { /* Ignore if response is not JSON */ }
-            throw new Error(errorMsg);
-          }
-
-          const data = await response.json();
+          const response = await axios.get(apiUrl);
+          const data = response.data;
           setStudentsData(Array.isArray(data) ? data : []);
 
         } catch (err) {
           console.error("Failed to fetch course students:", err);
-          setError(err.message || 'Failed to load student details.');
+          const errorMsg = err.response?.data?.message || err.response?.data || 'Failed to load student details.';
+          setError(errorMsg);
           setStudentsData([]);
         } finally {
           setIsLoading(false);
@@ -54,11 +41,7 @@ const CourseStudentsModal = ({ courseId, courseName, isOpen, onClose }) => {
   }, [isOpen, courseId]);
 
   if (!isOpen) return null;
-
-  // Assuming the API returns an array of objects like:
-  // { student_id: "...", display_name: "...", attendance_rate: 85.5 }
-  // Adjust 'display_name' and 'attendance_rate' keys if your API uses different names.
-
+  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 z-[60] flex justify-center items-center p-4 transition-opacity duration-300 ease-in-out" onClick={onClose}>
       <div

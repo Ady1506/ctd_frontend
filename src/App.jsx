@@ -14,7 +14,7 @@ function LayoutWithNavbar() {
   return (
     <div className='bg-[#EBEFF2] body flex flex-row'>
       <Navbar />
-      <div className='sub-body flex w-[85%]'>
+      <div className='sub-body flex w-full h-[100vh]'>
         <Routes>
           <Route path='/Dashboard' element={<Dashboard />} />
           <Route path='/adminCourses' element={<Forms />} />
@@ -22,7 +22,6 @@ function LayoutWithNavbar() {
           <Route path='/profile' element={<Ssetting />} />
           <Route path='/courses' element={<Courses />} />
           <Route path='/attendance' element={<Attendance />} />
-          {/* <Route path='/courseDescription' element={<CourseDescription />} /> */}
           <Route path="/CourseDescription/:id" element={<CourseDescription />} />
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Routes>

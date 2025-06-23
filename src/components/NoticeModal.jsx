@@ -1,6 +1,6 @@
 // src/components/NoticeModal.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-
+import axios from 'axios';
 const API_BASE_URL = 'http://localhost:8000/api';
 
 const PaperclipIcon = ({ className = "h-5 w-5" }) => (
@@ -35,17 +35,8 @@ const NoticeModal = ({ isOpen, onClose, courseId, courseName }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/notices?course_id=${courseId}`, {
-         method: 'GET',
-         headers: { /* Add headers if needed */ },
-         credentials: 'include',
-      });
-      if (!response.ok) {
-          let errorMsg = `Fetch failed: ${response.status}`;
-          try { const errData = await response.json(); errorMsg = errData.detail || errData.message || errorMsg } catch(e){}
-          throw new Error(errorMsg);
-      }
-      const data = await response.json();
+      const response = await axios.get(`${API_BASE_URL}/notices?course_id=${courseId}`);
+      const data = response.data;
 
       if (Array.isArray(data)) {
         const sortedData = data.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
@@ -54,7 +45,6 @@ const NoticeModal = ({ isOpen, onClose, courseId, courseName }) => {
         console.warn("API did not return an array for notices, received:", data);
         setNotices([]);
       }
-
     } catch (err) {
       console.error("Failed to fetch notices:", err);
       setError(err.message || 'Could not load notices.');
@@ -101,29 +91,11 @@ const NoticeModal = ({ isOpen, onClose, courseId, courseName }) => {
             return; // Stop submission if URL is invalid
         }
       }
-      const response = await fetch(`${API_BASE_URL}/notices`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add Authorization header if needed
-        },
-        credentials: 'include', // for cookie auth
-        body: JSON.stringify(payload),
-      });
+      await axios.post(`${API_BASE_URL}/notices`, payload);
 
-      if (!response.ok) {
-        let errorMsg = `Create failed: ${response.status}`;
-        // Add more detailed error parsing if needed
-        try { const errData = await response.json(); errorMsg = errData.detail || errData.message || errorMsg } catch(e){}
-        throw new Error(errorMsg);
-      }
-
-      // const createdNotice = await response.json(); // Get the created notice if needed
-
-      // Success: clear the form and re-fetch notices
       setNewNoticeContent('');
       setNewNoticeLink('');
-      await fetchNotices(); // Refresh the list
+      fetchNotices();
 
     } catch (err) {
       console.error("Failed to create notice:", err);

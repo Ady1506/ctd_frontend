@@ -14,12 +14,6 @@ const Auth = () => {
   });
   const [error, setError] = useState('');
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     navigate('/Dashboard');
-  //   }
-  // }, [navigate]);
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -59,10 +53,8 @@ const Auth = () => {
         ? { email, password, display_name, role: 'student' }
         : { email, password };
   
-      const res = await axios.post(endpoint, payload, {
-        withCredentials: true, // 👈🏽 Add this line
-      });
-  
+      const res = await axios.post(endpoint, payload)
+
       const { token } = res.data;
   
       localStorage.setItem('token', token);
@@ -70,9 +62,21 @@ const Auth = () => {
       localStorage.setItem('userRole', res.data.role); // Store user role in local storage
       navigate('/Dashboard');
     } catch (err) {
-      const msg =
-        err.response?.data?.message || 'Something went wrong. Please try again.';
-      setError(msg);
+      let errorMessage = 'Something went wrong. Please try again.'; // Default message
+      if (err.response && err.response.data) {
+        // If the backend sends a plain string error message (common with http.Error)
+        if (typeof err.response.data === 'string') {
+          errorMessage = err.response.data;
+        } 
+        // If the backend sends a JSON object with a 'message' field
+        else if (err.response.data.message && typeof err.response.data.message === 'string') {
+          errorMessage = err.response.data.message;
+        }
+      } else if (err.message) {
+        // For network errors or other issues where err.response might not exist
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
     }
   };
   

@@ -12,7 +12,7 @@ const DashCourseCard = ({ course }) => {
   return (
     <div
       onClick={handleCourseClick}
-      className="cursor-pointer flex flex-col h-full w-full bg-[#DDE4F0] p-4 gap-3 rounded-lg shadow hover:shadow-md transition"
+      className="cursor-pointer flex flex-col h-full min-w-72  bg-[#DDE4F0] p-4 gap-3 rounded-lg shadow hover:shadow-md transition"
     >
       <img
         src={course.link || '/placeholder.png'}

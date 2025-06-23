@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import UpdateCourseModal from './UpdateCourseModal.jsx'; 
 import CourseStudentsModal from './CourseStudentsModal.jsx'; 
 import NoticeModal from './NoticeModal.jsx';           
+import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -16,35 +17,10 @@ const CourseDetailModal = ({ course, isOpen, onClose, onCourseAction }) => {
   if (!isOpen || !course) return null;
 
   const handleArchive = async () => {
-    if (!course?.id) return;
-    const confirmArchive = window.confirm(`Are you sure you want to archive the course "${course.name}"?`);
-    if (!confirmArchive) return;
-
     setIsArchiving(true);
     setActionError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/courses/archive?id=${course.id}`, {
-        method: 'PUT', // Or POST/PATCH depending on API
-        headers: {
-          'Content-Type': 'application/json',
-          // Add Authorization header if needed
-        },
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        let errorMsg = `Archive failed: ${response.status}`;
-        try {
-          const errData = await response.json();
-          errorMsg = errData.detail || errData.message || errorMsg;
-        } catch (e) {
-           try {
-                const textData = await response.text();
-                if (textData) errorMsg = `${errorMsg} - ${textData.trim()}`;
-           } catch (textE) { /* Ignore */ }
-        }
-        throw new Error(errorMsg);
-      }
+      await axios.put(`/api/courses/archive?id=${course.id}`);
 
       alert('Course archived successfully!');
       if (onCourseAction) onCourseAction('archive', course.id);
@@ -52,7 +28,8 @@ const CourseDetailModal = ({ course, isOpen, onClose, onCourseAction }) => {
 
     } catch (err) {
       console.error("Archive failed:", err);
-      setActionError(err.message || 'Failed to archive course.');
+      const errorMsg = err.response?.data || err.message || 'Archive failed';
+      setActionError(errorMsg);
     } finally {
       setIsArchiving(false);
     }

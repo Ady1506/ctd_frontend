@@ -1,6 +1,6 @@
 // src/components/CreateCourseModal.jsx
 import React, { useState } from 'react';
-
+import axios from 'axios';
 const API_BASE_URL = 'http://localhost:8000/api';
 const CREATED_BY_ID = '644b2f5e6f2c3d4e5f123456'; // Replace with actual user ID or use auth
 
@@ -142,43 +142,15 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
     if (!payload.start_date) delete payload.start_date;
     if (!payload.end_date) delete payload.end_date;
 
-    console.log("Sending Payload:", JSON.stringify(payload, null, 2)); // Debug log
+     console.log("Sending Payload:", JSON.stringify(payload, null, 2)); // Debug log
 
     try {
-        const response = await fetch(`${API_BASE_URL}/courses`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include', // Keep for cookie auth
-            body: JSON.stringify(payload),
-        });
+        const response = await axios.post(`${API_BASE_URL}/courses`, payload);
 
-        // --- Robust Error Handling ---
-        if (!response.ok) {
-            let errorMsg = `HTTP error! Status: ${response.status}`;
-            let responseBodyText = '';
-            try {
-                responseBodyText = await response.text();
-                try {
-                    const errorData = JSON.parse(responseBodyText);
-                    errorMsg = errorData.detail || errorData.message || errorData.error || `${errorMsg} - ${responseBodyText.trim()}`;
-                } catch (parseError) {
-                    if (responseBodyText) {
-                        errorMsg = `${errorMsg} - ${responseBodyText.trim()}`;
-                    }
-                    console.warn("Response body was not valid JSON:", responseBodyText);
-                }
-            } catch (readError) {
-                console.error("Failed to read response body:", readError);
-                errorMsg = `${errorMsg} - Failed to read response body.`;
-            }
-            throw new Error(errorMsg);
-        }
-        // --- End Error Handling ---
-
-        const newCourse = await response.json();
+        const newCourse = response.data;
         setSuccessMessage('Course created successfully!');
         if (onCourseCreated) {
-            onCourseCreated(newCourse); // Corrected prop name usage
+            onCourseCreated(newCourse);
         }
         setFormData(initialFormData); // Reset form
 
@@ -189,7 +161,8 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
 
     } catch (err) {
         console.error('Create course failed:', err);
-        setError(err.message || 'Unexpected error occurred.');
+        const errorMsg = err.response?.data?.message || err.response?.data || err.message || 'Unexpected error occurred.';
+        setError(errorMsg);
     } finally {
         setIsSubmitting(false);
     }

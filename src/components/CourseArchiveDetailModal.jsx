@@ -1,9 +1,7 @@
 // src/components/CourseArchiveDetailModal.jsx
 import React, { useState } from 'react';
 import CourseStudentsModal from './CourseStudentsModal.jsx';
-
-// Assuming API_BASE_URL is defined elsewhere or passed as prop if needed for unarchive later
-// const API_BASE_URL = 'http://localhost:8000/api';
+import axios from 'axios';
 
 const CourseArchiveDetailModal = ({ course, isOpen, onClose, onCourseAction }) => {
   const [isUnarchiving, setIsUnarchiving] = useState(false);
@@ -13,35 +11,30 @@ const CourseArchiveDetailModal = ({ course, isOpen, onClose, onCourseAction }) =
   if (!isOpen || !course) return null;
 
   const handleUnarchive = async () => {
-    // --- Placeholder for Unarchive API Call ---
-    // You will replace this with your actual API call logic later
     if (!course?.id) return;
     const confirmUnarchive = window.confirm(`Are you sure you want to unarchive the course "${course.name}"?`);
     if (!confirmUnarchive) return;
 
     setIsUnarchiving(true);
     setActionError(null);
-    console.log(`Attempting to unarchive course ID: ${course.id}`);
 
-    // --- !!! Replace this block with your API call !!! ---
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-    const success = true; // Simulate success/failure
-    // const success = false; // Simulate failure
-    // --- End Placeholder ---
+    try {
+      // Replace placeholder with the actual API call
+      await axios.put(`/api/courses/unarchive?id=${course.id}`);
+      
+      alert('Course unarchived successfully!');
+      if (onCourseAction) onCourseAction('unarchive', course.id);
+      onClose();
 
-    if (success) {
-        alert('Course unarchived successfully! (Placeholder)');
-        if (onCourseAction) onCourseAction('unarchive', course.id); // Notify parent
-        onClose(); // Close this modal
-    } else {
-        const errorMsg = 'Failed to unarchive course. (Placeholder - Check API)';
-        console.error("Unarchive failed:", errorMsg);
-        setActionError(errorMsg);
-        setIsUnarchiving(false); // Re-enable button on failure
+    } catch (err) {
+      const errorMsg = err.response?.data || 'Failed to unarchive course.';
+      console.error("Unarchive failed:", err);
+      setActionError(errorMsg);
+    } finally {
+      setIsUnarchiving(false);
     }
-    // --- API call logic ends here ---
-
   };
+
   const handleStudents = () => {
     // alert(`Student details for course ID: ${course.id} - Functionality to be implemented.`); // Remove or comment out alert
     if (course?.id) {
