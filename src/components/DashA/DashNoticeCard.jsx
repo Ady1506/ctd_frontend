@@ -6,9 +6,8 @@ const DashNoticeCard = ({ date, time, text, hasAttachment, course, isExpanded, o
     return words.length > limit ? words.slice(0, limit).join(' ') + '...' : text;
   };
   
-
   return (
-    <div className='p-4 border flex flex-col justify-between rounded-lg shadow-md min-w-56 h-56 hover:shadow-lg transition-shadow duration-300 bg-gray-100 '>
+    <div className='w-full h-full p-4 border flex flex-col justify-between rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-gray-100 '>
       <div>
         <div className='text-sm text-gray-500 mb-1 flex justify-between'>
           <span>{date}</span>
@@ -16,7 +15,8 @@ const DashNoticeCard = ({ date, time, text, hasAttachment, course, isExpanded, o
         </div>
         <div className='font-bold text-[#173061] text-lg mb-2 truncate'>{course}</div>
         <div className='text-sm text-gray-700 mb-3 leading-relaxed'>
-          {isExpanded ? text : truncateText(text, 10)}
+          {/* {isExpanded ? text : truncateText(text, 10)} */}
+          {truncateText(text, 10)}
         </div>
       </div>
       <div className='flex items-center justify-between mt-2'>

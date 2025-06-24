@@ -30,15 +30,12 @@ const DashQT = () => {
       }
     };
 
-    // Wrap fetch logic in useCallback for stability if passed as prop or used in dependency arrays
     const fetchCourses = useCallback(async () => {
         setIsLoading(true);
         setError(null);
-        // Don't clear courses immediately if just refreshing after action
-        // setCourses([]);
 
         try {
-          const res = await axios.get(`${API_BASE_URL}/courses`, { // Fetch only active courses
+          const res = await axios.get(`${API_BASE_URL}/courses`, { 
             withCredentials: true
           });
 
@@ -63,18 +60,18 @@ const DashQT = () => {
             setIsLoading(false);
             setTimeout(handleScroll, 0);
         }
-    }, []); // Empty dependency array means this function instance doesn't change
+    }, []); 
 
     useEffect(() => {
       fetchCourses();
-    }, [fetchCourses]); // fetchCourses is stable due to useCallback
+    }, [fetchCourses]);
 
     useEffect(() => {
       const scrollContainer = scrollRef.current;
       if (scrollContainer) {
         scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
         window.addEventListener('resize', handleScroll);
-        handleScroll(); // Initial check
+        handleScroll(); 
       }
       return () => {
         if (scrollContainer) {
@@ -82,7 +79,7 @@ const DashQT = () => {
         }
         window.removeEventListener('resize', handleScroll);
       };
-    }, [courses, isLoading]); // Rerun scroll logic if courses or loading state changes
+    }, [courses, isLoading]); 
 
     const scrollLeft = () => {
       if (scrollRef.current) {
@@ -96,35 +93,28 @@ const DashQT = () => {
       }
     };
 
-    // --- Modal Handling Logic (from Forms.jsx, simplified) ---
     const handleViewDetails = (course) => {
-        // Assuming DashQT only shows active courses, no need to check 'archived'
         setSelectedCourse(course);
         setIsDetailModalOpen(true);
     };
 
     const handleCloseDetailModal = () => {
         setIsDetailModalOpen(false);
-        // Delay clearing selected course for fade-out animation if modal has one
         setTimeout(() => setSelectedCourse(null), 300);
     };
 
-    // Function to handle actions within the modal (e.g., archive, delete)
     const handleCourseAction = (actionType, courseId) => {
         console.log(`Action ${actionType} performed on course ${courseId} from DashQT`);
-        // Refresh the course list after an action
         fetchCourses();
     };
-    // --- End Modal Handling Logic ---
 
     const arrowButtonStyle = "focus:outline-none p-1 rounded-full hover:bg-gray-200 transition-colors duration-150";
 
     return (
-      // Use React.Fragment or a div if you need a wrapper around the flex container and modal
       <>
         <div className="flex w-full h-full items-center">
           {/* Left Arrow */}
-          <div className="w-[4%] flex justify-center items-center pr-1">
+          <div className="w-[4%] hidden lg:flex justify-center items-center pr-1">
             {showLeftArrow && (
               <button onClick={scrollLeft} aria-label="Scroll left" className={arrowButtonStyle}>
                   <img
@@ -140,7 +130,7 @@ const DashQT = () => {
           {/* Scrollable Course Container */}
           <div
             ref={scrollRef}
-            className="w-[92%] h-56 flex overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] gap-4 p-2"
+            className=" w-[96%] lg:w-[92%] h-56 flex overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] gap-4 p-2"
           >
             {isLoading ? (
                <div className="flex justify-center items-center w-full text-gray-500">Loading...</div>
@@ -151,7 +141,7 @@ const DashQT = () => {
                 <div
                    key={course.id || course._id}
                    className="flex-shrink-0 w-[23%] min-w-[210px] h-52 cursor-pointer"
-                   onClick={() => handleViewDetails(course)} // Add onClick here to trigger modal
+                   onClick={() => handleViewDetails(course)} 
                  >
                   <DashCourseCard course={course} />
                 </div>
@@ -164,7 +154,7 @@ const DashQT = () => {
           </div>
 
           {/* Right Arrow */}
-          <div className="w-[4%] flex justify-center items-center pl-1">
+          <div className="w-[4%] hidden lg:flex justify-center items-center pl-1">
             {showRightArrow && (
                <button onClick={scrollRight} aria-label="Scroll right" className={arrowButtonStyle}>
                   <img
