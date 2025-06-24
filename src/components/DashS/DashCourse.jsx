@@ -60,7 +60,7 @@ const DashCourse = () => {
   return (
     <div className="flex w-full h-full items-center">
       {/* Left Arrow */}
-      <div className="w-[4%] flex justify-center items-center">
+      <div className="w-[4%] hidden lg:flex justify-center items-center">
         {showLeftArrow && (
           <img
             className="h-5 cursor-pointer rotate-180"
@@ -73,11 +73,11 @@ const DashCourse = () => {
 
       <div
   ref={scrollRef}
-  className="w-[92%] h-[90%] flex overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] gap-6 p-0"
+  className="w-[96%] lg:w-[92%] h-56 flex overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] gap-2 p-2"
 >
   {courses!=null ? (
     courses.map((course) => (
-      <div key={course.id} className="w-[23%] min-w-[200px]">
+      <div key={course.id} className="flex-shrink-0 w-[25%] min-w-[210px] h-52">
         <DashCourseCard course={course} />
       </div>
     ))
@@ -89,7 +89,7 @@ const DashCourse = () => {
 </div>
 
       {/* Right Arrow */}
-      <div className="w-[4%] flex justify-center items-center">
+      <div className="w-[4%] hidden lg:flex justify-center items-center">
         {showRightArrow && (
           <img
             className="h-5 cursor-pointer"

@@ -54,7 +54,7 @@ const Dashboard = () => {
                 <DashCourse />
               </div>
               <div className="flex flex-col md:flex-row gap-4 flex-1 min-h-[300px]">
-                <div className="bg-lblue rounded w-full md:w-1/2 h-full min-h-[250px] overflow-hidden">
+                <div className="bg-lblue rounded w-full md:w-1/2 h-full min-h-[300px] overflow-hidden">
                   <DashNotice />
                 </div>
                 <div className="bg-lblue rounded w-full md:w-1/2 h-full min-h-[250px] overflow-hidden">
