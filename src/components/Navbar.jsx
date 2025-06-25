@@ -10,7 +10,11 @@ const Navbar = () => {
 
     useEffect(() => {
         const path = location.pathname.replace('/', '');
-        setSelect(path.charAt(0).toUpperCase() + path.slice(1));
+        if (path === 'admincourses') {
+            setSelect('Courses');
+        } else {
+            setSelect(path.charAt(0).toUpperCase() + path.slice(1));
+        }
     }, [location]);
 
     useEffect(() => {
@@ -71,13 +75,13 @@ const Navbar = () => {
                                     key={item.name}
                                     className={`flex flex-row items-center py-1.5 px-4 rounded-md cursor-pointer transition-colors duration-300 ${selected === item.name ? 'bg-dblue' : ''}`}
                                     onClick={() => {
+                                        setSelect(item.name);
                                         if (role === 'admin' && item.name === 'Courses') {
                                             navigate('/admincourses');
-                                            return;
                                         }
-                                        setSelect(item.name);
-                                        navigate(`/${item.name.toLowerCase()}`);
-
+                                        else {
+                                            navigate(`/${item.name.toLowerCase()}`);
+                                        }
                                     }}
                                 >
                                     <img
@@ -111,13 +115,18 @@ const Navbar = () => {
             </div>
 
             {/* Mobile Nav */}
-            <div className="mobile-nav lg:hidden fixed bottom-0 left-0 w-full bg-lblue flex justify-around py-4 shadow-md">
+            <div className="mobile-nav flex lg:hidden fixed bottom-0 left-0 w-full bg-lblue justify-around py-4 shadow-md z-50">
                 {navItems[role].map((item) => (
                     <button
                         key={item.name}
                         onClick={() => {
                             setSelect(item.name);
-                            navigate(`/${item.name.toLowerCase()}`);
+                            if (role === 'admin' && item.name === 'Courses') {
+                                navigate('/admincourses');
+                            }
+                            else {
+                                navigate(`/${item.name.toLowerCase()}`);
+                            }
                         }}
                         className="flex flex-col items-center"
                     >
@@ -132,6 +141,18 @@ const Navbar = () => {
                         />
                     </button>
                 ))}
+                
+                {/* Logout Button for Mobile */}
+                <button
+                    onClick={handleLogout}
+                    className="flex flex-col items-center"
+                >
+                    <img
+                        src="https://img.icons8.com/?size=100&id=2445&format=png&color=173061"
+                        alt="Logout"
+                        className="h-6 w-6 transition-transform duration-300 filter brightness-50 hover:brightness-75"
+                    />
+                </button>
             </div>
         </>
     );
