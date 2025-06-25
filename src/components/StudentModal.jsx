@@ -34,7 +34,7 @@ const StudentModal = ({ student, isOpen, onClose }) => {
       {/* ----- Student Details Modal ----- */}
       {/* Overlay - adjust z-index if needed, should be below courses modal */}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-60 z-10 flex justify-center items-center p-4 transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-black bg-opacity-60 z-10 flex justify-center items-center  pb-12  p-4 transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={onClose} // Clicking overlay closes this modal
       >
         {/* Modal Content */}

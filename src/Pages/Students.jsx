@@ -49,41 +49,48 @@ const Students = () => {
     setTimeout(() => setSelectedStudent(null), 300); // Match animation duration
   };
 
-  // --- Render Logic ---
-  let content;
-  if (loading) {
-    content = <div className="flex justify-center items-center py-10"><p className="text-gray-500">Loading students...</p></div>;
-  } else if (error) {
-    content = <div className="flex justify-center items-center py-10 text-red-600"><p>{error}</p></div>;
-  } else if (students.length === 0) {
-    content = <div className="flex justify-center items-center py-10"><p className="text-gray-500">No students found.</p></div>;
-  } else {
-    content = (
-        // Responsive grid layout for cards
-        // justify-center on small screens, justify-start on larger screens
-        <div className='student-list flex flex-row flex-wrap gap-4 justify-center sm:justify-start p-2 mt-4'>
-            {students.map(student => (
-            <StudentCard
-                key={student.id} // Use the unique student ID
-                student={student}
-                onClick={handleCardClick}
-            />
-            ))}
-      </div>
-    );
-  }
-
 
   return (
-    // Original structure: flex-col, w-full. Using min-h-screen instead of h-screen for flexibility.
-    // Keep padding p-4 md:p-10
-    <div className='body flex flex-col w-full min-h-screen p-4 md:p-10 bg-gray-50'>
-      <h1 className='text-dblue text-2xl md:text-3xl font-semibold mb-6'>Student Records</h1>
+    <div className='body flex flex-col w-full h-screen p-4 md:p-6 lg:p-8 overflow-hidden'>
+      {/* Fixed Header */}
+      <div className='flex-shrink-0 mb-4'>
+        <h1 className='text-[#173061] text-2xl lg:text-3xl font-semibold lg:pl-2 pl-2'>Student Records</h1>
+      </div>
 
-      {/* Render loading/error/content */}
-      {content}
+      {/* Scrollable Content */}
+      <div className='flex-1 overflow-y-auto pr-2 
+                    [&::-webkit-scrollbar]:[width:4px]
+                    [&::-webkit-scrollbar-thumb]:bg-[#173061]
+                    [&::-webkit-scrollbar-thumb]:rounded-full'>
+        <div className='pb-16 lg:pb-4'>
+          {/* Content area with bottom padding for mobile navbar */}
+          {loading ? (
+            <div className="flex justify-center items-center py-10">
+              <p className="text-gray-500">Loading students...</p>
+            </div>
+          ) : error ? (
+            <div className="flex justify-center items-center py-10 text-red-600">
+              <p>{error}</p>
+            </div>
+          ) : students.length === 0 ? (
+            <div className="flex justify-center items-center py-10">
+              <p className="text-gray-500">No students found.</p>
+            </div>
+          ) : (
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 p-2'>
+              {students.map(student => (
+                <StudentCard
+                  key={student.id}
+                  student={student}
+                  onClick={handleCardClick}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
-      {/* Render Modal - it will be positioned fixed, outside the normal flow */}
+      {/* Student Modal */}
       <StudentModal
         student={selectedStudent}
         isOpen={isModalOpen}
@@ -94,56 +101,3 @@ const Students = () => {
 };
 
 export default Students;
-// import React, { useState } from 'react';
-// import StudentCard from '../components/StudentCard';
-
-// const studentData = [
-//     { id: 1, name: 'John Doe', rollNo: '123', batch: '2023', branch: 'CSE', course: 'B.Tech' },
-//     { id: 2, name: 'Jane Smith', rollNo: '124', batch: '2023', branch: 'ECE', course: 'B.Tech' },
-//     { id: 1, name: 'John Doe', rollNo: '123', batch: '2023', branch: 'CSE', course: 'B.Tech' },
-//     { id: 2, name: 'Jane Smith', rollNo: '124', batch: '2023', branch: 'ECE', course: 'B.Tech' },
-//     { id: 1, name: 'John Doe', rollNo: '123', batch: '2023', branch: 'CSE', course: 'B.Tech' },
-//     { id: 2, name: 'Jane Smith', rollNo: '124', batch: '2023', branch: 'ECE', course: 'B.Tech' },
-//     { id: 1, name: 'John Doe', rollNo: '123', batch: '2023', branch: 'CSE', course: 'B.Tech' },
-//     { id: 2, name: 'Jane Smith', rollNo: '124', batch: '2023', branch: 'ECE', course: 'B.Tech' },
-//     { id: 1, name: 'John Doe', rollNo: '123', batch: '2023', branch: 'CSE', course: 'B.Tech' },
-//     { id: 2, name: 'Jane Smith', rollNo: '124', batch: '2023', branch: 'ECE', course: 'B.Tech' },
-// ];
-
-// const Students = () => {
-//   const [searchTerm, setSearchTerm] = useState('');
-//   const [filteredStudents, setFilteredStudents] = useState(studentData);
-
-//   const handleSearch = (event) => {
-//     const value = event.target.value.toLowerCase();
-//     setSearchTerm(value);
-//     const filtered = studentData.filter(student =>
-//       student.name.toLowerCase().includes(value) ||
-//       student.rollNo.toLowerCase().includes(value) ||
-//       student.batch.toLowerCase().includes(value) ||
-//       student.branch.toLowerCase().includes(value) ||
-//       student.course.toLowerCase().includes(value)
-//     );
-//     setFilteredStudents(filtered);
-//   };
-
-//   return (
-//     <div className='body flex flex-col w-full h-[100vh] p-4 md:p-10'>
-//       <h1 className='text-dblue text-2xl font-semibold'>Student Record</h1>
-//       <input
-//         type='text'
-//         placeholder='Search by name, roll no, batch, branch, course'
-//         value={searchTerm}
-//         onChange={handleSearch}
-//         className='mt-4 p-2 border border-gray-300 rounded'
-//       />
-//       <div className='student-list flex flex-row flex-wrap gap-2 p-2 mt-4 overflow-auto'>
-//         {filteredStudents.map(student => (
-//           <StudentCard key={student.id} student={student} />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Students;
