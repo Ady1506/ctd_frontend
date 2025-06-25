@@ -78,122 +78,128 @@ const CourseDetailModal = ({ course, isOpen, onClose, onCourseAction }) => {
   };
 
   return (
-    <>
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-black bg-opacity-60 z-40 flex justify-center items-center p-4 transition-opacity duration-300 ease-in-out"
-        onClick={onClose}
-      >
-        {/* Modal Content */}
-        <div
-          className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] flex flex-col z-50 transform transition-transform duration-300 ease-in-out scale-95 opacity-0 animate-modal-appear"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="flex justify-between items-center border-b pb-3 mb-4 flex-shrink-0">
-            <h2 className="text-xl font-semibold text-dblue">{course.name}</h2>
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-800 text-2xl font-bold leading-none" aria-label="Close modal">×</button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 pb-20 lg:pb-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto 
+                     [&::-webkit-scrollbar]:[width:4px] [&::-webkit-scrollbar-thumb]:bg-[#173061] [&::-webkit-scrollbar-thumb]:rounded-full">
+        
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 flex justify-between items-center">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#173061] text-justify">{course.name}</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-xl font-bold ml-4 flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+          
+          {/* Course Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-3 rounded text-justify">{course.description || 'No description available'}</p>
           </div>
-
-          {/* Scrollable Body */}
-          <div className="flex-grow overflow-y-auto pr-2 text-sm space-y-3">
-              <div><strong className="text-gray-600 w-24 inline-block">Subject:</strong> {course.subject || 'N/A'}</div>
-              <div><strong className="text-gray-600 w-24 inline-block">Duration:</strong> {course.duration_weeks ? `${course.duration_weeks} weeks` : 'N/A'}</div>
-              <div><strong className="text-gray-600 w-24 inline-block">Schedule:</strong> {formatSchedule(course.schedule)}</div>
-              <div><strong className="text-gray-600 w-24 inline-block">Start Date:</strong> {formatDate(course.start_date)}</div>
-              <div><strong className="text-gray-600 w-24 inline-block">End Date:</strong> {formatDate(course.end_date)}</div>
-
-              {course.meeting_link && (
-                 <div><strong className="text-gray-600 w-24 inline-block">Meeting Link:</strong> <a href={course.meeting_link} target="_blank" rel="noopener noreferrer" className="text-dblue hover:underline break-all">{course.meeting_link}</a></div>
-              )}
-
-              {course.link && (
-                 <div >
-                     <strong className="text-gray-600 w-24 inline-block align-top">Image:</strong>
-                     <img src={course.link} alt={`${course.name} preview`} className="inline-block max-w-xs h-auto rounded border max-h-48 object-contain ml-2" onError={(e) => e.target.style.display='none'} />
-                 </div>
-              )}
-
-              <div className=""><strong className="text-gray-600 block mb-1">Description:</strong>
-                <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-2 rounded border">{course.description || 'N/A'}</p>
+          
+          {/* Course Details Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Course Code</label>
+                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{course.code || 'N/A'}</p>
               </div>
-
-               {actionError && <p className="text-red-600 text-sm mt-2">{actionError}</p>}
-
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Credits</label>
+                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{course.credits || 'N/A'}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Duration</label>
+                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{course.duration || 'N/A'}</p>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{formatDate(course.startDate)}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{formatDate(course.endDate)}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Schedule</label>
+                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{formatSchedule(course.schedule)}</p>
+              </div>
+            </div>
           </div>
 
-          {/* Footer with Action Buttons */}
-          <div className="border-t pt-4 mt-4 flex flex-wrap justify-end gap-2 flex-shrink-0"> {/* Use gap for spacing */}
+          {/* Error Display */}
+          {actionError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
+              <strong>Error:</strong> {actionError}
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-4 border-t border-gray-200">
             <button
-                onClick={handleArchive}
-                disabled={isArchiving}
-                className="px-4 py-2 bg-dblue text-white rounded hover:bg-blue-900 transition duration-200 text-sm disabled:opacity-50 flex items-center"
+              onClick={handleUpdate}
+              className="w-full bg-[#173061] text-white px-4 py-2 rounded-md hover:bg-[#0f1f42] transition-colors font-medium text-sm"
             >
-                 {isArchiving ? (
-                    <>
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        Archiving...
-                    </>
-                 ) : 'Archive'}
+              Update
             </button>
+            
             <button
-                onClick={handleUpdate}
-                className="px-4 py-2 bg-dblue text-white rounded hover:bg-blue-900 transition duration-200 text-sm"
+              onClick={handleStudents}
+              className="w-full bg-[#173061] text-white px-4 py-2 rounded-md hover:bg-[#0f1f42] transition-colors font-medium text-sm"
             >
-                Update
+              Students
             </button>
-             <button
-                onClick={handleStudents}
-                className="px-4 py-2 bg-dblue text-white rounded hover:bg-blue-900 transition duration-200 text-sm"
+            
+            <button
+              onClick={handleNotice}
+              className="w-full bg-[#173061] text-white px-4 py-2 rounded-md hover:bg-[#0f1f42] transition-colors font-medium text-sm"
             >
-                Students
+              Notice
             </button>
-             <button
-                onClick={handleNotice}
-                className="px-4 py-2 bg-dblue text-white rounded hover:bg-blue-900 transition duration-200 text-sm"
+            
+            <button
+              onClick={handleArchive}
+              disabled={isArchiving}
+              className="w-full bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
             >
-                Notice
+              {isArchiving ? 'Archiving...' : 'Archive'}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Render other modals conditionally */}
-      {/* Ensure UpdateCourseModal and NoticeModal components are created and imported */}
+      {/* Nested Modals */}
+      <UpdateCourseModal
+        course={course}
+        isOpen={showUpdateModal}
+        onClose={() => setShowUpdateModal(false)}
+        onCourseUpdated={handleCourseUpdated}
+      />
 
-      {showUpdateModal && (
-        <UpdateCourseModal
-          isOpen={showUpdateModal}
-          onClose={() => setShowUpdateModal(false)}
-          courseToUpdate={course}
-          onCourseUpdated={handleCourseUpdated}
-        />
-      )}
+      <CourseStudentsModal
+        courseId={course?.id}
+        isOpen={showStudentsModal}
+        onClose={() => setShowStudentsModal(false)}
+      />
 
-       {showNoticeModal && (
-        <NoticeModal
-          isOpen={showNoticeModal}
-          onClose={() => setShowNoticeModal(false)}
-          courseId={course?.id}
-          courseName={course?.name}
-        />
-      )}
-      {showStudentsModal && (
-        <CourseStudentsModal
-          isOpen={showStudentsModal}
-          onClose={() => setShowStudentsModal(false)}
-          courseId={course?.id}
-          courseName={course?.name}
-        />
-      )}
-
-
-      <style jsx global>{`
-        @keyframes modal-appear { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .animate-modal-appear { animation: modal-appear 0.3s ease-out forwards; }
-        .whitespace-pre-wrap { white-space: pre-wrap; }
-      `}</style>
-    </>
+      <NoticeModal
+        courseId={course?.id}
+        isOpen={showNoticeModal}
+        onClose={() => setShowNoticeModal(false)}
+      />
+    </div>
   );
 };
 

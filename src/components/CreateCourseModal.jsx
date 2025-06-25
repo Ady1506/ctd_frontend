@@ -174,7 +174,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
   // --- JSX ---
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-60 z-40 flex justify-center items-center p-4 transition-opacity duration-300"
+      className="fixed inset-0 bg-black bg-opacity-60 z-40 flex justify-center items-center p-4 pb-20 lg:pb-4 transition-opacity duration-300"
       onClick={onClose}
     >
       <div

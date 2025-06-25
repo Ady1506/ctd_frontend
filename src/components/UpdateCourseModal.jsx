@@ -65,48 +65,60 @@ const formatDateToInput = (isoDateString) => {
 };
 // --- End Helper Functions ---
 
-const UpdateCourseModal = ({ isOpen, onClose, courseToUpdate, onCourseUpdated }) => {
+const UpdateCourseModal = ({ isOpen, onClose, course, courseToUpdate, onCourseUpdated }) => {
 
   const [formData, setFormData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
-  // No longer needed: const initialSnapshot = useRef(null);
 
   const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const ampmOptions = ['AM', 'PM'];
 
+  // Use either course or courseToUpdate prop
+  const courseData = course || courseToUpdate;
+
   // --- Effect to populate form ---
   useEffect(() => {
-    if (courseToUpdate) {
-      const startTimeHHMM = formatTimeToHHMM(courseToUpdate.schedule?.start_time);
-      const endTimeHHMM = formatTimeToHHMM(courseToUpdate.schedule?.end_time);
+    console.log("UpdateCourseModal: courseData =", courseData); // Debug log
+    
+    if (courseData) {
+      try {
+        const startTimeHHMM = formatTimeToHHMM(courseData.schedule?.start_time);
+        const endTimeHHMM = formatTimeToHHMM(courseData.schedule?.end_time);
 
-      setFormData({
-        name: courseToUpdate.name || '',
-        subject: courseToUpdate.subject || '',
-        description: courseToUpdate.description || '',
-        schedule: {
-          days: courseToUpdate.schedule?.days || [],
-          start_time: startTimeHHMM,
-          start_period: getPeriodFromHHMM(startTimeHHMM) || 'AM',
-          end_time: endTimeHHMM,
-          end_period: getPeriodFromHHMM(endTimeHHMM) || 'AM',
-        },
-        duration_weeks: courseToUpdate.duration_weeks || '',
-        meeting_link: courseToUpdate.meeting_link || '',
-        link: courseToUpdate.link || '',
-        start_date: formatDateToInput(courseToUpdate.start_date),
-        end_date: formatDateToInput(courseToUpdate.end_date),
-      });
-      // No longer needed: initialSnapshot.current = JSON.parse(JSON.stringify(initialData));
-      setError(null);
-      setSuccessMessage('');
+        const initialData = {
+          name: courseData.name || '',
+          subject: courseData.subject || '',
+          description: courseData.description || '',
+          schedule: {
+            days: courseData.schedule?.days || [],
+            start_time: startTimeHHMM,
+            start_period: getPeriodFromHHMM(startTimeHHMM) || 'AM',
+            end_time: endTimeHHMM,
+            end_period: getPeriodFromHHMM(endTimeHHMM) || 'AM',
+          },
+          duration_weeks: courseData.duration_weeks || '',
+          meeting_link: courseData.meeting_link || '',
+          link: courseData.link || '',
+          start_date: formatDateToInput(courseData.start_date),
+          end_date: formatDateToInput(courseData.end_date),
+        };
+        
+        console.log("UpdateCourseModal: Setting formData =", initialData); // Debug log
+        setFormData(initialData);
+        setError(null);
+        setSuccessMessage('');
+      } catch (err) {
+        console.error("Error setting form data:", err);
+        setError("Error loading course data: " + err.message);
+        setFormData({}); // Set empty form data to show the form
+      }
     } else {
+      console.log("UpdateCourseModal: No course data provided"); // Debug log
       setFormData(null);
-      // No longer needed: initialSnapshot.current = null;
     }
-  }, [courseToUpdate]);
+  }, [courseData]);
 
   // --- Standard handleChange (remains the same) ---
   const handleChange = (e) => {
@@ -144,7 +156,7 @@ const UpdateCourseModal = ({ isOpen, onClose, courseToUpdate, onCourseUpdated })
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
   
-    if (!formData || !courseToUpdate?.id) {
+    if (!formData || !courseData?.id) {
       setError("Cannot update: Course data is missing.");
       return;
     }
@@ -197,15 +209,14 @@ const UpdateCourseModal = ({ isOpen, onClose, courseToUpdate, onCourseUpdated })
     console.log("Sending UPDATE Payload:", JSON.stringify(payload, null, 2));
   
     try {
-      const response = await axios.put(`${API_BASE_URL}/courses?id=${courseToUpdate.id}`, payload);
+      const response = await axios.put(`${API_BASE_URL}/courses?id=${courseData.id}`, payload);
       
-      // Change response.text() to response.data
       const successText = response.data;
       console.log("Update success response text:", successText);
       setSuccessMessage('Course updated successfully!');
   
       if (onCourseUpdated) {
-        onCourseUpdated(courseToUpdate.id);
+        onCourseUpdated(courseData.id);
       }
   
       setTimeout(() => {
@@ -226,24 +237,29 @@ const UpdateCourseModal = ({ isOpen, onClose, courseToUpdate, onCourseUpdated })
    if (!isOpen) return null;
    if (!formData) {
        return (
-           <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center">
-               <div className="bg-white p-6 rounded">Loading course data...</div>
+           <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 pb-20 lg:pb-4">
+               <div className="bg-white p-4 sm:p-6 rounded-lg shadow-xl">
+                 {courseData ? "Loading course data..." : "No course data available"}
+                 <button onClick={onClose} className="ml-4 px-3 py-1 bg-gray-200 rounded text-sm">Close</button>
+               </div>
            </div>
        );
    }
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 transition-opacity duration-300"
+      className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 pb-20 lg:pb-4 transition-opacity duration-300"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl max-h-[95vh] overflow-y-auto z-50 transform transition-transform duration-300 ease-in-out scale-95 opacity-0 animate-modal-appear"
+        className="bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto z-50 transform transition-transform duration-300 ease-in-out scale-95 opacity-0 animate-modal-appear
+                   [&::-webkit-scrollbar]:[width:4px] [&::-webkit-scrollbar-track]:rounded-lg [&::-webkit-scrollbar-track]:m-[4px] 
+                   [&::-webkit-scrollbar-thumb]:bg-[#173061] [&::-webkit-scrollbar-thumb]:rounded-full"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center border-b pb-3 mb-6">
-          <h2 className="text-xl font-semibold text-dblue">Update Course Details</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-800 text-2xl font-bold" aria-label="Close modal"> × </button>
+          <h2 className="text-lg sm:text-xl font-semibold text-[#173061]">Update Course Details</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-800 text-xl sm:text-2xl font-bold" aria-label="Close modal"> × </button>
         </div>
 
         <form onSubmit={handleUpdateSubmit} className="space-y-4">
@@ -326,7 +342,7 @@ const UpdateCourseModal = ({ isOpen, onClose, courseToUpdate, onCourseUpdated })
           {/* Submission Buttons */}
           <div className="flex justify-end space-x-3 pt-5 border-t mt-6">
              <button type="button" onClick={onClose} disabled={isSubmitting} className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition duration-200 text-sm disabled:opacity-50"> Cancel </button>
-            <button type="submit" disabled={isSubmitting} className="px-6 py-2 bg-dblue text-white rounded shadow hover:bg-blue-900 transition duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center"> {isSubmitting ? ( <> <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"> <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle> <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path> </svg> Updating... </> ) : ( 'Save Changes' )} </button>
+            <button type="submit" disabled={isSubmitting} className="px-6 py-2 bg-[#173061] text-white rounded shadow hover:bg-[#0f1f42] transition duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center"> {isSubmitting ? ( <> <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"> <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle> <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path> </svg> Updating... </> ) : ( 'Save Changes' )} </button>
           </div>
         </form>
          <style jsx global>{` @keyframes modal-appear { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } } .animate-modal-appear { animation: modal-appear 0.3s ease-out forwards; } `}</style>
