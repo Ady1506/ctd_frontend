@@ -16,7 +16,7 @@ const CourseAttendance = ({ subjectWise }) => {
   );
 
   return (
-    <div className='flex flex-col h-full w-full p-4 gap-2'>
+    <div className='flex flex-col h-full w-full sm:p-4 gap-2'>
       {/* Header with Search */}
       <div className='flex items-center justify-between w-full'>
         <div className='text-[#173061] text-xl font-bold'>Course Based</div>
@@ -25,14 +25,15 @@ const CourseAttendance = ({ subjectWise }) => {
           placeholder='Search course...'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className='border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#173061]'
+          className='border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#173061] 
+            w-24 sm:w-40 md:w-56 lg:w-72 transition-all duration-200'
         />
       </div>
 
       {/* Scrollable Grid Layout */}
       <div className='overflow-y-auto max-h-[300px] pr-2 [&::-webkit-scrollbar]:[width:3px]
             [&::-webkit-scrollbar-thumb]:bg-dblue'>
-        <div className='grid grid-cols-2 gap-4'>
+        <div className='grid lg:grid-cols-2 gap-4'>
           {filteredCourses.map((course, index) => (
             <div key={index} className='flex flex-col gap-2'>
               <ParticularCourseAttendance
