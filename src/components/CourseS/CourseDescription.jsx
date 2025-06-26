@@ -47,14 +47,17 @@ const CourseDescription = () => {
   if (!course)  return <p className="p-4 text-red-500">Course not found.</p>;
 
   return (
-    <div className='body flex flex-col w-full h-full p-4 md:p-10 bg-gray-100'>
+    <div className='body flex flex-col w-full h-full p-4 md:p-10 bg-gray-100 overflow-y-auto pr-2 
+                    [&::-webkit-scrollbar]:[width:4px]
+                    [&::-webkit-scrollbar-thumb]:bg-[#173061]
+                    [&::-webkit-scrollbar-thumb]:rounded-full'>
       <div className='flex flex-row justify-between items-center w-full'>
         <div className='flex flex-row items-center gap-3'>
           <div
             className='flex items-center bg-[#DDE4F0] py-1 px-2 text-xs font-bold justify-center rounded cursor-pointer'
             onClick={() => navigate(-1)}
           >
-            &lt; BACK
+            &lt;BACK
           </div>
           <h1 className='text-2xl md:text-3xl font-semibold text-dblue'>
             {course.name}
@@ -64,36 +67,34 @@ const CourseDescription = () => {
       </div>
 
       {isEnrolled ? (
-        <div className='sub-body flex flex-col flex-grow w-full h-[75vh] mt-4 p-2 gap-2'>
-          <div className='flex w-full h-[50%] gap-2'>
-            <div className='flex-[2] bg-[#E4E9F0] rounded'>
+        <div className='sub-body flex flex-col flex-grow w-full lg:h-[70%] mt-4 p-2 gap-2 rounded-lg pb-16 lg:pb-2'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-2 h-full w-full'>
+            <div className='row-span-2 sm:row-span-1 col-span-1 sm:col-span-2 bg-[#E4E9F0] rounded max-h-[600px] sm:max-h-[300px]'>
               <CourseCardEnrolled course={course}/>
             </div>
-            <div className='flex-[1] bg-[#E4E9F0] rounded'>
+            <div className='col-span-1 bg-[#E4E9F0] rounded max-h-[300px]'>
               <Upcoming course={course}/>
             </div>
-          </div>
-          <div className='flex w-full h-[50%] gap-2'>
-            <div className='flex-[2] flex gap-2'>
-              <div className='flex-[1] bg-[#E4E9F0] rounded'>
-                <Updates course={course}/>
-              </div>
-              <div className='flex-[1] bg-[#E4E9F0] rounded'>
-                <CourseAttend course={course}/>
-              </div>
+            <div className='col-span-1 bg-[#E4E9F0] rounded max-h-[300px]'>
+              <Updates course={course}/>
             </div>
-            <div className='flex-[1] bg-[#E4E9F0] rounded'>
+            <div className='col-span-1 bg-[#E4E9F0] rounded max-h-[300px]'>
+              <CourseAttend course={course}/>
+            </div>
+            <div className='col-span-1 bg-[#E4E9F0] rounded max-h-[300px]'>
               <Certificates course={course}/>
             </div>
           </div>
         </div>
       ) : (
-        <div className='sub-body flex flex-grow w-full h-full mt-4 p-2 gap-2'>
-          <div className='bg-[#E4E9F0] flex-[2] rounded'>
-            <CourseCard course={course}/>
-          </div>
-          <div className='bg-[#E4E9F0] flex-[1] rounded'>
-            <EnrollCard course={course} />
+        <div className='sub-body flex flex-col flex-grow w-full md:h-full mt-2 p-2 gap-2 rounded-lg pb-16 md:pb-6 lg:pb-2'>
+          <div className='flex flex-col md:grid md:grid-cols-3 md:auto-rows-fr gap-2 h-full w-full'>
+            <div className='=md:row-span-1 md:col-span-2 bg-[#E4E9F0] rounded max-h-600px lg:max-h-full'>
+              <CourseCard course={course}/>
+            </div>
+            <div className='md:col-span-1 bg-[#E4E9F0] rounded max-h-[400px] md:max-h-full'>
+              <EnrollCard course={course} />
+            </div>
           </div>
         </div>
       )}
@@ -101,94 +102,6 @@ const CourseDescription = () => {
   );
 };
 
+
 export default CourseDescription;
 
-// // src/pages/CourseDescription.jsx
-// import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-// import Profo from '../Profo';
-// import CourseCard from './CourseCard';
-// import EnrollCard from './EnrollCard';
-// import CourseCardEnrolled from './CourseCardEnrolled';
-// import Updates from './Updates';
-// import Upcoming from './Upcoming';
-// import Certificates from './Certificates';
-
-// const CourseDescription = () => {
-//   const navigate = useNavigate();
-//   const [isEnrolled, setIsEnrolled] = useState(false);
-
-//   useEffect(() => {
-//     const courseId = localStorage.getItem('selectedCourseId');
-//     if (!courseId) {
-//       console.warn('No selectedCourseId in localStorage');
-//       return;
-//     }
-
-//     // Fetch enrolled courses and see if our courseId is in the list
-//     axios
-//       .get('http://localhost:8000/api/enrollments/courses', { withCredentials: true })
-//       .then(res => {
-//         const enrolledIds = res.data.map(c => c.id);
-//         setIsEnrolled(enrolledIds.includes(courseId));
-//       })
-//       .catch(err => {
-//         console.error('Failed to check enrollment status:', err);
-//       });
-//   }, []);
-
-//   return (
-//     <div className='body flex flex-col w-full h-full p-4 md:p-10 bg-gray-100'>
-//       <div className='flex flex-row justify-between items-center w-full'>
-//         <div className='flex flex-row items-center gap-3'>
-//           <div
-//             className='flex items-center bg-[#DDE4F0] py-1 px-2 text-xs font-bold justify-center rounded cursor-pointer'
-//             onClick={() => navigate(-1)}
-//           >
-//             &lt; BACK
-//           </div>
-//           <h1 className='text-2xl md:text-3xl font-semibold text-dblue'>
-//             Course Description
-//           </h1>
-//         </div>
-//         <Profo />
-//       </div>
-
-//       {isEnrolled ? (
-//         <div className='sub-body flex flex-col flex-grow w-full h-[75vh] mt-4 p-2 gap-2'>
-//           <div className='flex w-full h-[50%] gap-2'>
-//             <div className='flex-[2] bg-[#E4E9F0] rounded'>
-//               <CourseCardEnrolled />
-//             </div>
-//             <div className='flex-[1] bg-[#E4E9F0] rounded'>
-//               <Upcoming />
-//             </div>
-//           </div>
-//           <div className='flex w-full h-[50%] gap-2'>
-//             <div className='flex-[2] flex gap-2'>
-//               <div className='flex-[1] bg-[#E4E9F0] rounded'>
-//                 <Updates />
-//               </div>
-//               <div className='flex-[1] bg-[#E4E9F0] rounded'></div>
-//             </div>
-//             <div className='flex-[1] bg-[#E4E9F0] rounded'>
-//               <Certificates />
-//             </div>
-//           </div>
-//         </div>
-//       ) : (
-//         <div className='sub-body flex flex-grow w-full h-full mt-4 p-2 gap-2'>
-//           <div className='bg-[#E4E9F0] flex-[2] rounded'>
-//             <CourseCard />
-//           </div>
-//           <div className='bg-[#E4E9F0] flex-[1] rounded'>
-//             <EnrollCard />
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default CourseDescription;

@@ -64,15 +64,23 @@ const CourseAttend = ({ course }) => {
   const attendedSessions = recentAttendance.filter(record => record.courseName === course.name);
 
   return (
-    <div className='h-full w-full flex flex-col gap-3 p-4'>
-      <div className='flex justify-between w-full text-[#173061]'>
-        <div className='font-bold text-lg cursor-default'>Attendance</div>
+    <div className='h-full w-full flex flex-col p-4 overflow-hidden'>
+      {/* Fixed Header */}
+      <div className='flex-shrink-0 mb-3'>
+        <div className='font-bold text-lg text-[#173061] cursor-default'>Attendance</div>
       </div>
-      <div className='flex flex-row flex-wrap justify-center gap-2 w-full overflow-auto pr-2'>
-        {sessionDates.map((sessionDate, index) => {
-          const isMarked = attendedSessions.some(record => dayjs(record.markedAt).isSame(sessionDate, 'day'));
-          return <AttendanceIcon key={index} marked={isMarked} sessionName={sessionDate} />;
-        })}
+      
+      {/* Scrollable Content */}
+      <div className='flex-1 overflow-y-auto pr-2 
+                    [&::-webkit-scrollbar]:[width:4px]
+                    [&::-webkit-scrollbar-thumb]:bg-[#173061]
+                    [&::-webkit-scrollbar-thumb]:rounded-full'>
+        <div className='flex flex-row flex-wrap justify-center gap-2'>
+          {sessionDates.map((sessionDate, index) => {
+            const isMarked = attendedSessions.some(record => dayjs(record.markedAt).isSame(sessionDate, 'day'));
+            return <AttendanceIcon key={index} marked={isMarked} sessionName={sessionDate} />;
+          })}
+        </div>
       </div>
     </div>
   );

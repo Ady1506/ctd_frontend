@@ -1,40 +1,26 @@
-// import React from 'react'
-
-// const CourseCardEnrolled = () => {
-//   return (
-//     <div className='flex p-4 gap-5 h-full w-full'>
-//         <img src="image.png" className='flex-[2]' alt="" />
-//         <div className='flex flex-col flex-[3] gap-2 h-full justify-between py-2'>
-//           <div className='flex flex-col gap-1'>
-//             <div className='text-3xl font-bold text-[#173061]'>Advance Finance</div>
-//             <div className='text-md text-[#173061]'>A small description for the course which will be helpful to the user.</div>
-//           </div>
-//           {/* <div className='flex flex-col'>
-//             <div className='text-sm text-[#173061] '>Tutor</div>
-//             <div className='text-lg text-[#173061] font-bold'>Mr. Varun Singh</div>
-//           </div> */}
-//         </div>
-//     </div>
-//   )
-// }
-
-// export default CourseCardEnrolled
 import React from 'react';
 
 const CourseCardEnrolled = ({ course }) => {
   if (!course) return null;
 
   return (
-    <div className='flex p-4 gap-5 h-full w-full'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 p-4 gap-5 h-full w-full'>
       {/* Course image */}
+      <div className='w-full h-full overflow-hidden rounded-md bg-gray-200 flex items-center justify-center'>
       <img
         src={course.link || '/placeholder.png'}
         alt={course.name}
-        className='flex-[2] object-cover rounded-md'
+        className='w-full h-full object-cover'
       />
-      <div className='flex flex-col flex-[3] gap-2 h-full py-2'>
-        <div className='text-3xl font-bold text-[#173061]'>{course.name}</div>
-        <div className='text-md text-[#173061] line-clamp-3'>{course.description}</div>
+    </div>
+      <div className='flex flex-col gap-2 h-full py-2 min-h-0'>
+        <div className='text-3xl font-bold text-[#173061] flex-shrink-0'>{course.name}</div>
+        <div className='flex-1 overflow-y-auto pr-2 
+                    [&::-webkit-scrollbar]:[width:4px]
+                    [&::-webkit-scrollbar-thumb]:bg-[#173061]
+                    [&::-webkit-scrollbar-thumb]:rounded-full'>
+          <div className='text-md text-[#173061] pr-2'>{course.description}</div>
+        </div>
       </div>
     </div>
   );

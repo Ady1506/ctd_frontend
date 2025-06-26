@@ -31,11 +31,11 @@ const Upcoming = ({ course }) => {
       <div className='flex-[3] flex justify-between w-full text-[#173061]'>
         <div className='flex-[3] p-4 flex flex-col gap-2'>
           <div className='text-xl font-bold'>
-            {sessionOngoing ? 'Session ongoing' : 'Upcoming'}
+            {sessionOngoing ? 'Ongoing' : 'Upcoming'}
           </div>
           <div className='text-sm'>
             {sessionOngoing
-              ? 'Attending the meet will automatically mark your attendance'
+              ? 'Join your ongoing session'
               : 'Prepare for your next session'}
           </div>
         </div>

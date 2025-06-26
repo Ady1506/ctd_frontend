@@ -4,8 +4,7 @@ import axios from 'axios';
 const API_BASE_URL = 'http://localhost:8000/api';
 const CREATED_BY_ID = '644b2f5e6f2c3d4e5f123456'; // Replace with actual user ID or use auth
 
-// --- Helper Function to Format HH:MM to h:mm A ---
-// (This function remains correct and useful for handleSubmit)
+// --- Helper Functions for Time Conversion ---
 const formatTimeToAmPm = (timeString_HHMM) => {
   if (!timeString_HHMM) return '';
   const [hoursStr, minutesStr] = timeString_HHMM.split(':');
@@ -21,7 +20,41 @@ const formatTimeToAmPm = (timeString_HHMM) => {
   const paddedMinute = String(M).padStart(2, '0');
   return `${H}:${paddedMinute} ${ampm}`;
 };
-// --- End Helper Function ---
+
+// Convert 12-hour time to 24-hour format for HTML time input
+const convertTo24Hour = (time12h, period) => {
+  if (!time12h) return '';
+  const [hours, minutes] = time12h.split(':');
+  let hour24 = parseInt(hours, 10);
+  
+  if (period === 'AM' && hour24 === 12) {
+    hour24 = 0;
+  } else if (period === 'PM' && hour24 !== 12) {
+    hour24 += 12;
+  }
+  
+  return `${String(hour24).padStart(2, '0')}:${minutes}`;
+};
+
+// Convert 24-hour time to 12-hour format
+const convertTo12Hour = (time24h) => {
+  if (!time24h) return { time: '', period: 'AM' };
+  const [hours, minutes] = time24h.split(':');
+  let hour12 = parseInt(hours, 10);
+  const period = hour12 >= 12 ? 'PM' : 'AM';
+  
+  if (hour12 === 0) {
+    hour12 = 12;
+  } else if (hour12 > 12) {
+    hour12 -= 12;
+  }
+  
+  return {
+    time: `${String(hour12).padStart(2, '0')}:${minutes}`,
+    period: period
+  };
+};
+// --- End Helper Functions ---
 
 // Remove the incorrect handleTimeChange and handlePeriodChange from the global scope
 
@@ -33,9 +66,9 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
     description: '',
     schedule: {
       days: [],
-      start_time: '', // Stores HH:MM from input
+      start_time: '', // Stores 12-hour format time for display
       start_period: 'AM', // Stores 'AM' or 'PM'
-      end_time: '',   // Stores HH:MM from input
+      end_time: '',   // Stores 12-hour format time for display
       end_period: 'AM',   // Stores 'AM' or 'PM'
     },
     duration_weeks: '',
@@ -70,8 +103,17 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
           newSchedule.days = checked
             ? [...prev.schedule.days, value]
             : prev.schedule.days.filter((day) => day !== value);
+        } else if (name === 'start_time' || name === 'end_time') {
+          // Convert 24-hour input to 12-hour format for display
+          const { time, period } = convertTo12Hour(value);
+          newSchedule[name] = time;
+          if (name === 'start_time') {
+            newSchedule.start_period = period;
+          } else {
+            newSchedule.end_period = period;
+          }
         } else {
-          // Directly update the corresponding schedule field (e.g., start_time, start_period)
+          // Handle period changes (AM/PM)
           newSchedule[name] = value;
         }
         return { ...prev, schedule: newSchedule };
@@ -110,9 +152,13 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
       return;
     }
 
+    // Convert 12-hour time to proper format for backend
+    const startTime24 = convertTo24Hour(formData.schedule.start_time, formData.schedule.start_period);
+    const endTime24 = convertTo24Hour(formData.schedule.end_time, formData.schedule.end_period);
+    
     // Format the time using the helper function just before sending
-    const formattedStartTime = formatTimeToAmPm(formData.schedule.start_time);
-    const formattedEndTime = formatTimeToAmPm(formData.schedule.end_time);
+    const formattedStartTime = formatTimeToAmPm(startTime24);
+    const formattedEndTime = formatTimeToAmPm(endTime24);
 
     // Final check on formatted times
     if (!formattedStartTime || !formattedEndTime) {
@@ -174,18 +220,19 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
   // --- JSX ---
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-60 z-40 flex justify-center items-center p-4 pb-20 lg:pb-4 transition-opacity duration-300"
+      className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 pb-20 lg:pb-4 transition-opacity duration-300"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl max-h-[95vh] overflow-y-auto z-50"
+        className="bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto z-50 
+                   [&::-webkit-scrollbar]:[width:4px] [&::-webkit-scrollbar-thumb]:bg-[#173061] [&::-webkit-scrollbar-thumb]:rounded-full"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center border-b pb-3 mb-6">
-          <h2 className="text-xl font-semibold text-dblue">Create New Course</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-[#173061]">Create New Course</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-800 text-2xl font-bold"
+            className="text-gray-500 hover:text-gray-800 text-xl sm:text-2xl font-bold"
             aria-label="Close modal"
           >
             ×
@@ -204,7 +251,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                 value={formData.name}
                 onChange={handleChange} // Use consolidated handler
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-dblue focus:border-dblue"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#173061] focus:border-[#173061]"
               />
             </div>
             <div>
@@ -216,7 +263,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                 value={formData.subject}
                 onChange={handleChange} // Use consolidated handler
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-dblue focus:border-dblue"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#173061] focus:border-[#173061]"
               />
             </div>
           </div>
@@ -230,7 +277,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
               rows="3"
               value={formData.description}
               onChange={handleChange} // Use consolidated handler
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-dblue focus:border-dblue"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#173061] focus:border-[#173061]"
             ></textarea>
           </div>
 
@@ -250,7 +297,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                       value={day}
                       checked={formData.schedule.days.includes(day)}
                       onChange={handleChange} // Use consolidated handler
-                      className="h-4 w-4 text-dblue focus:ring-dblue border-gray-300 rounded"
+                      className="h-4 w-4 text-[#173061] focus:ring-[#173061] border-gray-300 rounded"
                     />
                     <label htmlFor={`day-${day}`} className="ml-2 block text-sm text-gray-700">{day}</label>
                   </div>
@@ -266,18 +313,19 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                   <input
                     type="time"
                     id="start_time"
-                    name="start_time" // Name matches state key for HH:MM
-                    value={formData.schedule.start_time} // Bind to HH:MM state
-                    onChange={handleChange} // Use consolidated handler
+                    name="start_time"
+                    value={convertTo24Hour(formData.schedule.start_time, formData.schedule.start_period)}
+                    onChange={handleChange}
                     required
-                    className="w-full border rounded px-2 py-1 border-gray-300 shadow-sm focus:ring-dblue focus:border-dblue"
+                    className="w-full border rounded px-2 py-1 border-gray-300 shadow-sm focus:ring-[#173061] focus:border-[#173061] [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    step="900"
                   />
                   <select
-                    name="start_period" // Name matches state key for AM/PM
+                    name="start_period"
                     id="start_period"
-                    value={formData.schedule.start_period} // Bind to period state
-                    onChange={handleChange} // Use consolidated handler
-                    className="border rounded px-2 py-1 bg-white border-gray-300 shadow-sm focus:ring-dblue focus:border-dblue"
+                    value={formData.schedule.start_period}
+                    onChange={handleChange}
+                    className="border rounded px-2 py-1 bg-white border-gray-300 shadow-sm focus:ring-[#173061] focus:border-[#173061]"
                   >
                     {ampmOptions.map(p => <option key={`start-${p}`} value={p}>{p}</option>)}
                   </select>
@@ -290,18 +338,19 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                   <input
                     type="time"
                     id="end_time"
-                    name="end_time" // Name matches state key for HH:MM
-                    value={formData.schedule.end_time} // Bind to HH:MM state
-                    onChange={handleChange} // Use consolidated handler
+                    name="end_time"
+                    value={convertTo24Hour(formData.schedule.end_time, formData.schedule.end_period)}
+                    onChange={handleChange}
                     required
-                    className="w-full border rounded px-2 py-1 border-gray-300 shadow-sm focus:ring-dblue focus:border-dblue"
+                    className="w-full border rounded px-2 py-1 border-gray-300 shadow-sm focus:ring-[#173061] focus:border-[#173061] [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    step="900"
                   />
                   <select
-                    name="end_period" // Name matches state key for AM/PM
+                    name="end_period"
                     id="end_period"
-                    value={formData.schedule.end_period} // Bind to period state
-                    onChange={handleChange} // Use consolidated handler
-                    className="border rounded px-2 py-1 bg-white border-gray-300 shadow-sm focus:ring-dblue focus:border-dblue"
+                    value={formData.schedule.end_period}
+                    onChange={handleChange}
+                    className="border rounded px-2 py-1 bg-white border-gray-300 shadow-sm focus:ring-[#173061] focus:border-[#173061]"
                   >
                     {ampmOptions.map(p => <option key={`end-${p}`} value={p}>{p}</option>)}
                   </select>
@@ -321,7 +370,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                 value={formData.duration_weeks}
                 onChange={handleChange} // Use consolidated handler
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-dblue focus:border-dblue"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#173061] focus:border-[#173061]"
               />
             </div>
             <div>
@@ -333,7 +382,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                 value={formData.meeting_link}
                 onChange={handleChange} // Use consolidated handler
                 placeholder="https://example.com/meet"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-dblue focus:border-dblue"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#173061] focus:border-[#173061]"
               />
             </div>
             <div>
@@ -345,7 +394,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                 value={formData.link}
                 onChange={handleChange} // Use consolidated handler
                 placeholder="https://example.com/image.png"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-dblue focus:border-dblue"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#173061] focus:border-[#173061]"
               />
             </div>
           </div>
@@ -360,7 +409,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                 name="start_date"
                 value={formData.start_date}
                 onChange={handleChange} // Use consolidated handler
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-dblue focus:border-dblue"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#173061] focus:border-[#173061]"
               />
             </div>
             <div>
@@ -371,7 +420,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
                 name="end_date"
                 value={formData.end_date}
                 onChange={handleChange} // Use consolidated handler
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-dblue focus:border-dblue"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#173061] focus:border-[#173061]"
               />
             </div>
           </div>
@@ -393,7 +442,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2 bg-dblue text-white rounded shadow hover:bg-blue-700 transition duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              className="px-6 py-2 bg-[#173061] text-white rounded shadow hover:bg-[#0f1f42] transition duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
             >
               {isSubmitting ? (
                  <>
