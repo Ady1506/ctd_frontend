@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const Navbar = () => {
     const location = useLocation();
@@ -47,10 +48,7 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         try {
-            await fetch("http://localhost:8000/api/users/logout", {
-                method: "POST",
-                credentials: "include",
-            });
+            await axios.post('/api/users/logout');
             localStorage.removeItem("token");
             localStorage.removeItem("userData");
             localStorage.removeItem("userRole");
