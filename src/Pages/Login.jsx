@@ -5,14 +5,19 @@ import axios from 'axios';
 const Auth = () => {
   const navigate = useNavigate();
   const [isSignup, setIsSignup] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [form, setForm] = useState({
     email: '',
-    password: '',
-    display_name: '',
     roll: '',
-    role: 'student', // fixed role
+    branch: '',
+    year: '',
+    mobile: '',
+    display_name: '',
+    password: '',
+    role: 'student',
   });
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -36,48 +41,98 @@ const Auth = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const toggleMode = () => {
-    setIsSignup((prev) => !prev);
+  const resetFormAndMessages = () => {
+    setForm({
+      email: '', roll: '', branch: '', year: '', mobile: '', display_name: '', password: '', role: 'student',
+    });
     setError('');
+    setSuccessMessage('');
+  };
+
+  const switchToSignup = () => {
+    setIsSignup(true);
+    setIsForgotPassword(false);
+    resetFormAndMessages();
+  };
+
+  const switchToLogin = () => {
+    setIsSignup(false);
+    setIsForgotPassword(false);
+    resetFormAndMessages();
+  };
+
+  const switchToForgotPassword = () => {
+    setIsForgotPassword(true);
+    setIsSignup(false);
+    resetFormAndMessages();
+  };
+
+  const toggleMode = () => {
+    setIsSignup(!isSignup);
+    setIsForgotPassword(false);
+    resetFormAndMessages();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint = isSignup
-      ? '/api/users/signup'
-      : '/api/users/signin';
-  
-    try {
-      const { email, password, display_name } = form;
-      const payload = isSignup
-        ? { email, password, display_name, role: 'student' }
-        : { email, password };
-  
-      const res = await axios.post(endpoint, payload)
+    setError('');
+    setSuccessMessage('');
 
-      const { token } = res.data;
-  
-      localStorage.setItem('token', token);
-      localStorage.setItem('userData', JSON.stringify(res.data));
-      localStorage.setItem('userRole', res.data.role); // Store user role in local storage
-      navigate('/Dashboard');
-    } catch (err) {
-      let errorMessage = 'Something went wrong. Please try again.'; // Default message
-      if (err.response && err.response.data) {
-        // If the backend sends a plain string error message (common with http.Error)
-        if (typeof err.response.data === 'string') {
-          errorMessage = err.response.data;
-        } 
-        // If the backend sends a JSON object with a 'message' field
-        else if (err.response.data.message && typeof err.response.data.message === 'string') {
-          errorMessage = err.response.data.message;
-        }
-      } else if (err.message) {
-        // For network errors or other issues where err.response might not exist
-        errorMessage = err.message;
+    if (isForgotPassword) {
+      try {
+        await axios.post('/api/users/forgot-password', { email: form.email });
+        setSuccessMessage('If an account with that email exists, a password reset link has been sent. Please check your inbox.');
+        switchToLogin();
+      } catch (err) {
+        const msg = err.response?.data?.message || 'Failed to send reset link. Please try again.';
+        setError(msg);
       }
-      setError(errorMessage);
+      return;
     }
+
+    if (isSignup) {
+      try {
+        const payload = {
+          ...form,
+          roll: Number(form.roll),
+          year: Number(form.year),
+          mobile: Number(form.mobile),
+        };
+        await axios.post('/api/users/signup', payload);
+        setSuccessMessage('Signup successful! Please verify your account via email and then login.');
+      } catch (err) {
+        if (err.response && err.response.status === 409) {
+          console.log('account already exists');
+          setError('Email already exists.');
+        } else {
+          const msg = err.response?.data?.message || 'Signup failed.';
+          setError(msg);
+        }
+      }
+    } else {
+      try {
+        const { email, password } = form;
+        const res = await axios.post(
+          '/api/users/signin',
+          { email, password }
+        );
+
+        const { token } = res.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('userData', JSON.stringify(res.data));
+        localStorage.setItem('userRole', res.data.role);
+        navigate('/Dashboard');
+      } catch (err) {
+        const msg = err.response?.data?.message || 'Login failed. Please check your credentials or verify your account.';
+        setError(msg);
+      }
+    }
+  };
+
+  const getTitle = () => {
+    if (isForgotPassword) return 'Reset Password';
+    if (isSignup) return 'Sign Up';
+    return 'Login';
   };
   
 
@@ -112,12 +167,18 @@ const Auth = () => {
           className="w-full max-w-md bg-white bg-opacity-90 p-8 rounded shadow-lg space-y-4"
         >
           <h2 className="text-2xl text-[#173061] font-semibold mb-4 text-center">
-            {isSignup ? 'Sign Up' : 'Login'}
+            {getTitle()}
           </h2>
 
           {error && (
             <div className="bg-red-100 text-red-700 px-4 py-2 rounded">
               {error}
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="bg-green-100 text-green-700 px-4 py-2 rounded">
+              {successMessage}
             </div>
           )}
 
@@ -127,6 +188,7 @@ const Auth = () => {
                 type="text"
                 name="display_name"
                 placeholder="Name"
+                value={form.display_name}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
                 required
@@ -135,6 +197,34 @@ const Auth = () => {
                 type="text"
                 name="roll"
                 placeholder="Roll Number"
+                value={form.roll}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+              <input
+                type="text"
+                name="branch"
+                placeholder="Branch"
+                value={form.branch}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+              <input
+                type="text"
+                name="year"
+                placeholder="Year"
+                value={form.year}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+              <input
+                type="text"
+                name="mobile"
+                placeholder="Mobile Number"
+                value={form.mobile}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
                 required
@@ -146,21 +236,29 @@ const Auth = () => {
             type="email"
             name="email"
             placeholder="Email"
+            value={form.email}
             onChange={handleChange}
             className="w-full p-2 border rounded"
             required
           />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
+          
+          {!isForgotPassword && (
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          )}
 
-          {!isSignup && (
-            <div className="text-sm text-right text-[#173061] cursor-pointer hover:underline">
+          {!isSignup && !isForgotPassword && (
+            <div 
+              onClick={switchToForgotPassword}
+              className="text-sm text-right text-[#173061] cursor-pointer hover:underline"
+            >
               Forgot password?
             </div>
           )}
@@ -169,32 +267,44 @@ const Auth = () => {
             type="submit"
             className="w-full bg-[#173061] hover:shadow-lg hover:shadow-[#173061]/50 text-white p-2 rounded mt-2"
           >
-            {isSignup ? 'Sign Up' : 'Login'}
+            {isForgotPassword ? 'Send Reset Link' : (isSignup ? 'Sign Up' : 'Login')}
           </button>
 
-          <p className="text-center text-[#173061] mt-4">
-            {isSignup ? (
-              <>
-                Already have an account?{' '}
-                <span
-                  onClick={toggleMode}
-                  className="cursor-pointer underline hover:opacity-80"
-                >
-                  Login
-                </span>
-              </>
-            ) : (
-              <>
-                Don't have an account?{' '}
-                <span
-                  onClick={toggleMode}
-                  className="cursor-pointer underline hover:opacity-80"
-                >
-                  Sign Up
-                </span>
-              </>
-            )}
-          </p>
+          {isForgotPassword ? (
+            <p className="text-center text-[#173061] mt-4">
+              Remember your password?{' '}
+              <span
+                onClick={switchToLogin}
+                className="cursor-pointer underline hover:opacity-80"
+              >
+                Back to Login
+              </span>
+            </p>
+          ) : (
+            <p className="text-center text-[#173061] mt-4">
+              {isSignup ? (
+                <>
+                  Already have an account?{' '}
+                  <span
+                    onClick={toggleMode}
+                    className="cursor-pointer underline hover:opacity-80"
+                  >
+                    Login
+                  </span>
+                </>
+              ) : (
+                <>
+                  Don't have an account?{' '}
+                  <span
+                    onClick={toggleMode}
+                    className="cursor-pointer underline hover:opacity-80"
+                  >
+                    Sign Up
+                  </span>
+                </>
+              )}
+            </p>
+          )}
         </form>
       </div>
     </div>
