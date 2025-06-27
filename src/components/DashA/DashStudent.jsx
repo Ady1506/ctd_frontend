@@ -18,7 +18,7 @@ const DashStudent = () => {
 
       try {
         // Fetch users with credentials included
-        const response = await axios.get('http://localhost:8000/api/users', {
+        const response = await axios.get('/api/users', {
           withCredentials: true,
         });
 

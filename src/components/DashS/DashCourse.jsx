@@ -12,7 +12,7 @@ const DashCourse = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/api/courses');
+        const res = await axios.get('/api/courses');
         setCourses(res.data);
         console.log(res.data);
       } catch (err) {

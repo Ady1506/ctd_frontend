@@ -14,7 +14,7 @@ const Attendance = () => {
     useEffect(() => {
         const fetchAttendanceSummary = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/attendance/summary');
+                const response = await axios.get('/api/attendance/summary');
                 setTotalPercentage(response.data.total_percentage);
                 setSubjectWise(response.data.subject_wise);
             } catch (error) {
@@ -24,7 +24,7 @@ const Attendance = () => {
 
         const fetchRecentAttendance = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/attendances/recent');
+                const response = await axios.get('/api/attendances/recent');
                 const parsedData = response.data.map(item => ({
                     courseName: item.course_name,
                     markedAt: item.marked_at,

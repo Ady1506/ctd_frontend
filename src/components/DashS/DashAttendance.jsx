@@ -11,7 +11,7 @@ const DashAttendance = () => {
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/attendances/recent');
+        const response = await axios.get('/api/attendances/recent');
         if(response.data){
           const parsedData = response.data.map(item => ({
             courseName: item.course_name,

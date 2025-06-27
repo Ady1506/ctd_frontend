@@ -23,7 +23,7 @@ const DashNotice = () => {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/notices/enrolled');
+        const response = await axios.get('/api/notices/enrolled');
         const formattedNotices = response.data.map((notice) => {
           const createdAt = dayjs(notice.created_at);
           return {

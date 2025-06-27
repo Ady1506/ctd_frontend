@@ -17,7 +17,7 @@ const Auth = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/api/users/current', {
+        const res = await axios.get('/api/users/current', {
           withCredentials: true, // important for sending cookies
         });
 
@@ -44,8 +44,8 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = isSignup
-      ? 'http://localhost:8000/api/users/signup'
-      : 'http://localhost:8000/api/users/signin';
+      ? '/api/users/signup'
+      : '/api/users/signin';
   
     try {
       const { email, password, display_name } = form;

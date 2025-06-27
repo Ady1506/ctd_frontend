@@ -12,7 +12,7 @@ const EnrollCard = ({ course, studentId, onEnrolled }) => {
     try {
       setLoading(true);
       const response = await axios.post(
-        'http://localhost:8000/api/enrollments',
+        '/api/enrollments',
         {
           student_id: studentId,     // Pass student ID
           course_id: course.id,      // Pass course ID

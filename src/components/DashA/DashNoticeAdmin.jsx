@@ -23,7 +23,7 @@ const DashNotice = () => {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/admin/notices',{
+        const response = await axios.get('/api/admin/notices',{
             withCredentials: true 
         });
         const formattedNotices = response.data.map((notice) => {

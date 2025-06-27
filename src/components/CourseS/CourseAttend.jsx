@@ -11,7 +11,7 @@ const CourseAttend = ({ course }) => {
     const fetchRecentAttendance = async () => {
       try {
         console.log(course);
-        const response = await axios.get('http://localhost:8000/api/attendances/recent');
+        const response = await axios.get('/api/attendances/recent');
         const parsedData = response.data.map(item => ({
           courseName: item.course_name,
           markedAt: item.marked_at,

@@ -22,14 +22,14 @@ const CourseDescription = () => {
     const load = async () => {
       try {
         // 1) load all courses and pick ours
-        const coursesRes = await axios.get('http://localhost:8000/api/courses', {
+        const coursesRes = await axios.get('/api/courses', {
           withCredentials: true,
         });
         const found = coursesRes.data.find(c => c.id === id) || null;
         setCourse(found);
 
         // 2) check enrollment
-        const enrollRes = await axios.get('http://localhost:8000/api/enrollments/courses', {
+        const enrollRes = await axios.get('/api/enrollments/courses', {
           withCredentials: true,
         });
         const enrolledIds = enrollRes.data.map(c => c.id);
