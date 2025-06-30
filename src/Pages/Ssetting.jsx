@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 const Ssetting = () => {
   const [userData, setUserData] = useState({
@@ -14,10 +13,6 @@ const Ssetting = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // const res = await axios.get('http://localhost:8000/api/users/current', {
-        //   withCredentials: true,
-        // });
-        // console.log('Fetched user data:', res.data);
         const res = JSON.parse(localStorage.getItem('userData'));
         console.log('Fetched user data:', res);
         setUserData({
@@ -121,7 +116,7 @@ const Ssetting = () => {
 
             <p className="text-xs sm:text-sm text-gray-500 text-center mt-6 sm:mt-8">
               For any discrepancies/changes, contact{' '}
-              <span className="text-[#173061] font-semibold underline">varleen@thapar.edu</span>
+              <span className="text-[#173061] font-semibold underline">varleen.kaur@thapar.edu</span>
             </p>
           </div>
         </div>

@@ -7,8 +7,6 @@ import CourseArchiveDetailModal from '../components/CourseArchiveDetailModal';
 import axios from 'axios';
 
 
-const API_BASE_URL = 'http://localhost:8000/api';
-
 const Forms = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -27,8 +25,8 @@ const Forms = () => {
         setCourses([]);
 
         const url = tab === 'active'
-           ? `${API_BASE_URL}/courses`
-           : `${API_BASE_URL}/courses/archived`;
+           ? `api/courses`
+           : `api/courses/archived`;
 
         console.log(`Fetching courses from: ${url} (Tab: ${tab})`);
 
@@ -51,6 +49,7 @@ const Forms = () => {
 
     useEffect(() => {
         fetchCourses(activeTab);
+        console.log(courses)
     }, [activeTab]);
 
     const handleViewDetails = (course) => {

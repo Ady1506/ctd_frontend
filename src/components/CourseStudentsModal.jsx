@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api';
 
 const CourseStudentsModal = ({ courseId, courseName, isOpen, onClose }) => {
   const [studentsData, setStudentsData] = useState([]);
@@ -17,7 +16,7 @@ const CourseStudentsModal = ({ courseId, courseName, isOpen, onClose }) => {
         setStudentsData([]);
 
         try {
-          const apiUrl = `${API_BASE_URL}/admin/course-students?course_id=${courseId}`;
+          const apiUrl = `api/admin/course-students?course_id=${courseId}`;
           const response = await axios.get(apiUrl);
           const data = response.data;
           setStudentsData(Array.isArray(data) ? data : []);

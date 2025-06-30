@@ -1,6 +1,6 @@
 // src/components/EnrolledCoursesModal.jsx
 import React, { useState, useEffect } from 'react';
-
+import axios from 'axios';
 const EnrolledCoursesModal = ({ studentId, isOpen, onClose }) => {
   const [coursesData, setCoursesData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

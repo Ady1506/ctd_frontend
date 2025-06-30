@@ -1,9 +1,6 @@
 // src/components/UpdateCourseModal.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// No longer needed: import _isEqual from 'lodash/isEqual';
-
-const API_BASE_URL = 'http://localhost:8000/api';
 
 // --- Helper functions (keep formatTimeToAmPm, formatTimeToHHMM, getPeriodFromHHMM, formatDateToInput) ---
 const formatTimeToAmPm = (timeString_HHMM) => {
@@ -209,7 +206,7 @@ const UpdateCourseModal = ({ isOpen, onClose, course, courseToUpdate, onCourseUp
     console.log("Sending UPDATE Payload:", JSON.stringify(payload, null, 2));
   
     try {
-      const response = await axios.put(`${API_BASE_URL}/courses?id=${courseData.id}`, payload);
+      const response = await axios.put(`api/courses?id=${courseData.id}`, payload);
       
       const successText = response.data;
       console.log("Update success response text:", successText);

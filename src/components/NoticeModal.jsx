@@ -1,7 +1,6 @@
 // src/components/NoticeModal.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-const API_BASE_URL = 'http://localhost:8000/api';
 
 const PaperclipIcon = ({ className = "h-5 w-5" }) => (
   <svg
@@ -35,7 +34,7 @@ const NoticeModal = ({ isOpen, onClose, courseId, courseName }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`${API_BASE_URL}/notices?course_id=${courseId}`);
+      const response = await axios.get(`api/notices?course_id=${courseId}`);
       const data = response.data;
 
       if (Array.isArray(data)) {
@@ -91,7 +90,7 @@ const NoticeModal = ({ isOpen, onClose, courseId, courseName }) => {
             return; // Stop submission if URL is invalid
         }
       }
-      await axios.post(`${API_BASE_URL}/notices`, payload);
+      await axios.post(`api/notices`, payload);
 
       setNewNoticeContent('');
       setNewNoticeLink('');

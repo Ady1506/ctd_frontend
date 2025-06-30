@@ -5,7 +5,6 @@ import CourseStudentsModal from './CourseStudentsModal.jsx';
 import NoticeModal from './NoticeModal.jsx';           
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api';
 
 const CourseDetailModal = ({ course, isOpen, onClose, onCourseAction }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -71,6 +70,7 @@ const CourseDetailModal = ({ course, isOpen, onClose, onCourseAction }) => {
   };
 
   const formatSchedule = (schedule) => {
+    console.log(schedule)
     if (!schedule) return 'N/A';
     const days = schedule.days?.join(', ') || 'No specific days';
     const time = (schedule.start_time && schedule.end_time) ? `${schedule.start_time} - ${schedule.end_time}` : 'No specific time';
@@ -106,30 +106,21 @@ const CourseDetailModal = ({ course, isOpen, onClose, onCourseAction }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Course Code</label>
-                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{course.code || 'N/A'}</p>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Credits</label>
-                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{course.credits || 'N/A'}</p>
-              </div>
-              
-              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Duration</label>
-                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{course.duration || 'N/A'}</p>
+                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{`${course.duration_weeks} weeks` || 'N/A'}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{formatDate(course.start_date)}</p>
               </div>
             </div>
             
             <div className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{formatDate(course.startDate)}</p>
-              </div>
+              
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{formatDate(course.endDate)}</p>
+                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-2 rounded">{formatDate(course.end_date)}</p>
               </div>
               
               <div>

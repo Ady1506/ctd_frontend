@@ -4,7 +4,6 @@ import axios from 'axios';
 import DashCourseCard from './DashCourseCard';
 import CourseDetailModal from '../CourseDetailModal'; // Import the detail modal
 
-const API_BASE_URL = 'http://localhost:8000/api';
 
 const DashQT = () => {
     const scrollRef = useRef(null);
@@ -35,8 +34,7 @@ const DashQT = () => {
         setError(null);
 
         try {
-          const res = await axios.get(`${API_BASE_URL}/courses`, { 
-            withCredentials: true
+          const res = await axios.get(`api/courses`, { 
           });
 
           if (Array.isArray(res.data)) {

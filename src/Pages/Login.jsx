@@ -23,7 +23,6 @@ const Auth = () => {
     const checkAuth = async () => {
       try {
         const res = await axios.get('/api/users/current', {
-          withCredentials: true, // important for sending cookies
         });
 
         if (res.data.user) {

@@ -1,7 +1,6 @@
 // src/components/CreateCourseModal.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-const API_BASE_URL = 'http://localhost:8000/api';
 const CREATED_BY_ID = '644b2f5e6f2c3d4e5f123456'; // Replace with actual user ID or use auth
 
 // --- Helper Functions for Time Conversion ---
@@ -191,7 +190,7 @@ const CreateCourseModal = ({ isOpen, onClose, onCourseCreated }) => {
      console.log("Sending Payload:", JSON.stringify(payload, null, 2)); // Debug log
 
     try {
-        const response = await axios.post(`${API_BASE_URL}/courses`, payload);
+        const response = await axios.post(`api/courses`, payload);
 
         const newCourse = response.data;
         setSuccessMessage('Course created successfully!');
